@@ -31,6 +31,7 @@ def optional_debug(func):
         # 为params增加debug的参数
         # 从源码得知，Parameter可以接收5个参数
         # name为参数名称
+        # TODO 应该是5种，等待补完
         # kind为参数类型，一共4种：POSITIONAL_OR_KEYWORD、VAR_POSITIONAL、VAR_KEYWORD、KEYWORD_ONLY
         #   参数类型为VAR_POSITIONAL时，即*args参数，只能通过位置传值
         #   参数类型为VAR_KEYWORD，即 **kwargs参数，只能通过关键字传值
