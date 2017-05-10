@@ -10,9 +10,7 @@ from functools import wraps
 
 __author__ = 'blackmatrix'
 
-"""
-编写装饰器为被包装的函数添加参数
-"""
+# 编写装饰器为被包装的函数添加参数
 
 
 def optional_debug(func):
@@ -43,7 +41,8 @@ def optional_debug(func):
         # 还有个*，也暂时不清楚什么作用
         # TODO 有空试试传入annotation，还有折腾看看这个*是什么意思
         parms.append(Parameter(name='debug', kind=Parameter.KEYWORD_ONLY, default=False))
-        # TODO __signature__ 应该是函数的魔法变量，是否能通过__signature__获取到函数签名？ 待测试
+        # 关于__signature__，官方文档的描述： signature() uses this to stop unwrapping if any object in the chain has a __signature__ attribute defined.
+        # 当对象中存在__signature__属性时，获取装饰链中的函数签名，都会返回__signature__的值，但是只是在signature()函数中返回__signature__的值，本身并不会改变函数的参数
         wrapper.__signature__ = sig.replace(parameters=parms)
         return func(*args, **kwargs)
     return wrapper
