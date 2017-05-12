@@ -9,7 +9,7 @@ from functools import wraps
 
 __author__ = 'blackmatrix'
 
-# 主要测试下类方法和实例方法
+# 关于函数与方法的一些感想和测试
 
 
 def test_decorator(func):
