@@ -26,26 +26,36 @@ def test_decorator(func):
     return wrapper
 
 
-# 这个装饰器不太好理解
 def attach_wrapper(obj, func=None):
-    # 当func 为 None的时候，实际上执行的是下面例子中的attach_wrapper
-    # 也就是装饰器的第一层函数，接收装饰器需要的对象
-    # @attach_wrapper(obj=wrapper)，将需要处理的对象传入装饰器
+    """
+    第一次调用时，@attach_wrapper(obj=wrapper)，将需要处理的对象传入装饰器
+    此时func为None，实际上执行的是下面例子中的 my_attach_wrapper
+    也就是装饰器的第一层函数，接收装饰器需要的对象
+    :param obj: 
+    :param func: 
+    :return: 
+    """
     if func is None:
-        # 返回的偏函数，实际上是下面例子中的 _attach_wrapper
-        # 也就是装饰器的第二层函数，接受被包装的函数对象
-        # 通过偏函数，只用一个函数，实现两个函数：外部函数接受需要处理的对象，及其内部包装器的功能
-        # 很酷，很巧妙，但是不容易理解
+        '''
+        返回的偏函数，实际上是下面例子中的 _my_attach_wrapper
+        也就是装饰器的第二层函数，接受被包装的函数对象
+        通过偏函数，只用一个函数，实现两个函数：外部函数接受需要处理的对象，及其内部包装器的功能
+        很酷，很巧妙，但是不容易理解
+        '''
         return partial(attach_wrapper, obj)
     setattr(obj, func.__name__, func)
     return func
 
 
-# 如果这样写就非常容易理解了，如果被包装的方法存在，就把这个方法附加到被传入的对象中
 def my_attach_wrapper(obj):
-    def _attach_wrapper(func):
+    """
+    如果这样写就非常容易理解了，如果被包装的方法存在，就把这个方法附加到被传入的对象中
+    :param obj: 
+    :return: 
+    """
+    def _my_attach_wrapper(func):
             setattr(obj, func.__name__, func)
-    return _attach_wrapper
+    return _my_attach_wrapper
 
 
 def logged(level, name=None, message=None):
