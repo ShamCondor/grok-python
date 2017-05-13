@@ -49,7 +49,7 @@ def attach_wrapper(obj, func=None):
 
 def my_attach_wrapper(obj):
     """
-    如果这样写就非常容易理解了，如果被包装的方法存在，就把这个方法附加到被传入的对象中
+    如果这样写就非常容易理解了，把这个方法附加到被传入的对象中
     :param obj: 
     :return: 
     """
@@ -76,11 +76,22 @@ def logged(level, name=None, message=None):
             nonlocal level
             level = newlevel
 
-        @attach_wrapper(obj=wrapper)
+        # @attach_wrapper(obj=wrapper)
         def set_message(newmsg):
             print('set message')
             nonlocal logmsg
             logmsg = newmsg
+
+        # 用过装饰器的话，一定可以知道，set_message方法上，被注释掉的装饰器，实际上等于下面的方法
+        # attach_wrapper(wrapper)(set_message)
+        # 对上面这个语句，还可以继续拆分：
+        # 因为 func is None，所以执行代码 return partial(attach_wrapper, obj)
+        # 我们得到一个偏函数，也是包装器
+        partial_func = attach_wrapper(wrapper)
+        # 因为偏函数已经带有一个obj参数， 所以再次调用时，执行 setattr(obj, func.__name__, func)
+        # 此时给装饰器传入的对象，附加上被装饰的函数
+        partial_func(set_message)
+
         return wrapper
     return dectorate
 
