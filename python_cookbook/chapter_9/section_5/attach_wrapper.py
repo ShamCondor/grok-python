@@ -11,7 +11,7 @@ from functools import wraps, partial
 __author__ = 'blackmatrix'
 
 
-# 定义一个可由被包装函数修改的装饰器
+# 定义一个可由用户修改的装饰器
 
 
 def test_decorator(func):
