@@ -17,6 +17,13 @@ def optional_debug(func):
     @wraps(func)
     # 在包装器的位置，增加debug参数
     def wrapper(*args, debug=False, **kwargs):
+        """
+        包装器增加一个debug参数
+        :param args:  func接受的参数
+        :param debug:  包装器增加的参数
+        :param kwargs:  func接受的参数
+        :return: 
+        """
         if debug:
             print('Calling ', func.__name__)
 
@@ -31,17 +38,15 @@ def optional_debug(func):
         # 为params增加debug的参数
         # 从源码得知，Parameter可以接收5个参数
         # name为参数名称
-        # TODO 应该是5种，等待补完
-        # kind为参数类型，一共4种：POSITIONAL_OR_KEYWORD、VAR_POSITIONAL、VAR_KEYWORD、KEYWORD_ONLY
+        # kind为参数类型，一共5种：POSITIONAL_OR_KEYWORD、VAR_POSITIONAL、VAR_KEYWORD、KEYWORD_ONLY、POSITIONAL_ONLY
         #   参数类型为VAR_POSITIONAL时，即*args参数，只能通过位置传值
         #   参数类型为VAR_KEYWORD，即 **kwargs参数，只能通过关键字传值
         #   参数的类型为POSITIONAL_OR_KEYWORD时，说明此参数前面没有VAR_POSITIONAL类型的参数，可以通过位置或关键字传值
         #   参数类型为KEYWORD_ONLY时，说明此参数前面存在VAR_POSITIONAL类型的参数，只能通过关键字传值
+        #   参数类型为POSITIONAL_ONLY时，比较特殊，Python没有明确定义只能通过位置传参的语法，一般是内建和一些扩展模块的函数参数会有这样的类型
         # default 为参数默认值
-        # annotation 从字面的意义是注释的意思，没有试验不清楚传入值会怎么样
-        # 还有个*，也暂时不清楚什么作用
-        # TODO 有空试试传入annotation，还有折腾看看这个*是什么意思
-        parms.append(Parameter(name='debug', kind=Parameter.KEYWORD_ONLY, default=False))
+        # annotation 给参数增加一个注释，如果没有注释，为 Parameter.empty.
+        parms.append(Parameter(name='debug', kind=Parameter.KEYWORD_ONLY, default=False, annotation='包装器增加的参数'))
         # 关于__signature__，官方文档的描述： signature() uses this to stop unwrapping if any object in the chain has a __signature__ attribute defined.
         # 当对象中存在__signature__属性时，获取装饰链中的函数签名，都会返回__signature__的值，但是只是在signature()函数中返回__signature__的值，本身并不会改变函数的参数
         wrapper.__signature__ = sig.replace(parameters=parms)
@@ -55,6 +60,7 @@ def spam(a, b, c):
 
 
 if __name__ == '__main__':
+    func_signature = signature(spam)
     spam(1, 2, 3)
     spam(1, 2, 3, debug=True)
     # 上面的等同于
