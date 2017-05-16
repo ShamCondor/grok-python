@@ -5,23 +5,11 @@
 # @Site    :
 # @File    : func_method.py
 # @Software: PyCharm
-from functools import wraps
+from common import test_decorator
 
 __author__ = 'blackmatrix'
 
 # 关于函数与方法的一些感想和测试
-
-
-def test_decorator(func):
-    """
-    装饰器，测试使用，无功能
-    :param func: 
-    :return: 
-    """
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        return func(*args, **kwargs)
-    return wrapper
 
 
 def the_function():
