@@ -127,7 +127,7 @@ if __name__ == '__main__':
     # unwrap(spam2, stop=callback3)
     print('结果是直接抛异常，缺少参数value，因为unwrap只会把本次解包的对象传入回调函数', '\n')
 
-    print('再试试回调函数返回True的时候是不是真的可以提前终止解包')
+    print('再试试回调函数返回True的时候是不是真的可以提前终止解包？')
     unwrap(spam2, stop=callback2)()
     '''
     得到以下输出结果：
