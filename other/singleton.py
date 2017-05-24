@@ -20,6 +20,11 @@ class Singleton(type):
         if cls.__instance is None:
             # TODO 为什么是__call__ 方法，而不是__init__ 或者  __new__ ?
             # TODO type 中，__call__ 和 __init__ 还有 __new__ 是什么关系？
+            '''
+            目前能理解的是，元类定义__call__方法，可以抢在类运行 __new__ 和 __init__ 之前执行，
+            也就是创建单例模式的前提，在类实例化前拦截掉。
+            不能理解的是，为什么是调用 super().__call__(*args, **kwargs)，而不是__new__ 或 __init__ ？
+            '''
             cls.__instance = super().__call__(*args, **kwargs)
             return cls.__instance
         else:
