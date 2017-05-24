@@ -123,6 +123,7 @@ class C(B):
 
 
 if __name__ == '__main__':
+    print(super(B, C).__repr__)
     # c = C()
     # b = B()
-    B.class_method()
+    # B.class_method()
