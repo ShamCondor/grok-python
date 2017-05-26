@@ -32,8 +32,17 @@ class Singleton(type):
 
 class Spam(metaclass=Singleton):
 
+    """
+    一些说明：
+    如果__new__没有返回类实例的情况下，
+    __init__的方法是不会被调用的。因为__init__需要类实例作为第一个参数self
+    这个是时候，单例模式不会起作用，因为__init__都没有运行
+    没有实例创建出来，何来的单例模式
+    """
+
     def __new__(cls):
         print('Spam __new__ running')
+        return super().__new__(cls)
 
     def __init__(self):
         print('Spam __init__ running')
@@ -48,13 +57,9 @@ if __name__ == '__main__':
     输出结果：
     Singleton __call__ running
     Spam __new__ running
+    Spam __init__ running
     Singleton __call__ running
-    Spam __new__ running
     True
     Singleton __call__ running
-    Spam __new__ running
     True
-    之所以没有执行__init__，是因为在__new__方法之后，如果没有返回这个类的实例
-    那__init__就不会执行，想想很容易理解，__init__方法需要一个实例self，
-    __new__没有创建出实例来，__init__自然无法执行
     '''
