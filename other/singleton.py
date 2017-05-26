@@ -44,3 +44,17 @@ if __name__ == '__main__':
     print(a is b)
     c = Spam()
     print(a is c)
+    '''
+    输出结果：
+    Singleton __call__ running
+    Spam __new__ running
+    Singleton __call__ running
+    Spam __new__ running
+    True
+    Singleton __call__ running
+    Spam __new__ running
+    True
+    之所以没有执行__init__，是因为在__new__方法之后，如果没有返回这个类的实例
+    那__init__就不会执行，想想很容易理解，__init__方法需要一个实例self，
+    __new__没有创建出实例来，__init__自然无法执行
+    '''
