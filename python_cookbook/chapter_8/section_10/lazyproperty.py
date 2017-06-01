@@ -37,11 +37,10 @@ class lazyproperty:
     那么它和类的绑定关系就会比较弱。这个时候，如果类的实例的__dict__中定于了同名的
     属性，那么会直接访问这个属性，而不会执行描述符的__get__方法。
     所以，如果在lazyproperty类中加入了__set__方法，那么每次访问被装饰的方法时，
-    就会去执行描述符的__get__方法，而重新计算值
+    就会去执行描述符的__get__方法，而重新计算值，这个时候惰性求值的功能就会失效。
     '''
     def __set__(self, instance, value):
         print('lazyproperty __set__')
-        pass
 
 
 class Circle:
@@ -64,5 +63,5 @@ if __name__ == '__main__':
     print(c.area)
     print(c.area)
     print(c.__dict__)
-    # c.area = 25
+    c.area = 25
     print(c.area)
