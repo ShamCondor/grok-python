@@ -24,6 +24,7 @@ def func(word):
     # 这里最关键的地方就是给函数自身增加一个内嵌函数后,将函数自身返回
     func.print_word = _print_word
 
+    # 有局限性,对于需要返回其他值的函数就不太适用了
     return func
 
 
