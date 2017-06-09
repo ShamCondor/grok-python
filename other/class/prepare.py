@@ -48,6 +48,12 @@ class OrderMeta(type):
         d = dict(clsdict)
         order = []
         for name, value in clsdict.items():
+            '''
+            书中代码,对value类型做了判断,只对描述符的类属性进行记录,而其他的属性不会记录顺序
+            如果不做类型判断,那就会出现Stock 没有 __qualname__ 的异常
+            原因是Structrue的as_csv读取的是实例成员,而__qualname__这个类属性比较特殊,无法通过
+            实例去获取到,所以在使用类的实例self去获取__qualname__属性时就会引发异常。
+            '''
             if isinstance(value, Typed):
                 value._name = name
                 order.append(name)
@@ -97,6 +103,9 @@ class Stock(Structrue):
 
 if __name__ == '__main__':
     s = Stock('Good', 100, 490.1)
+    stock_dict = Stock.__dict__
+    print(stock_dict)
+    print(getattr(Stock, '__qualname__'))
     print(s.name)
     print(s.hello)
     print(s.as_csv())
