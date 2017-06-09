@@ -12,6 +12,9 @@ __author__ = 'blackmatix'
 
 """
 本例来自《Python cookbook》 9.14 获取类属性的定义顺序
+注释部分为个人理解
+参考:
+https://www.python.org/dev/peps/pep-3115/#abstract
 """
 
 
