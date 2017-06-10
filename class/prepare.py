@@ -12,34 +12,15 @@ __author__ = 'blackmatix'
 
 """
 本例来自《Python cookbook》 9.14 获取类属性的定义顺序
+原书中代码带有类型判断的描述符, 为了易于理解, 将此部分代码去除,并做一些简化和修改
 注释部分为个人理解
+
+本例最核心的代码就是__prepare__返回一个OrderDict,这样在处理类定义体的时候,会将类属性的
+创建顺序在OrderDict中保存下来
+
 参考:
 https://www.python.org/dev/peps/pep-3115/#abstract
 """
-
-
-class Typed:
-    _except_type = type(None)
-
-    def __init__(self, name=None):
-        self.name = name
-
-    def __set__(self, instance, value):
-        if not isinstance(value, self._except_type):
-            raise TypeError
-        instance.__dict__[self.name] = value
-
-
-class Integer(Typed):
-    _except_type = int
-
-
-class String(Typed):
-    _except_type = str
-
-
-class Float(Typed):
-    _except_type = float
 
 
 class OrderMeta(type):
@@ -53,10 +34,9 @@ class OrderMeta(type):
             如果不做类型判断,那就会出现Stock 没有 __qualname__ 的异常
             原因是Structrue的as_csv读取的是实例成员,而__qualname__这个类属性比较特殊,无法通过
             实例去获取到,所以在使用类的实例self去获取__qualname__属性时就会引发异常。
+            针对此问题,在as_csv函数中做了判断。
             '''
-            if isinstance(value, Typed):
-                value._name = name
-                order.append(name)
+            order.append(name)
         d['_order'] = order
         return type.__new__(mcs, clsname, bases, d)
 
@@ -85,27 +65,24 @@ class OrderMeta(type):
     '''
 
 
-class Structrue(metaclass=OrderMeta):
+class Stock(metaclass=OrderMeta):
+    name = 'Good'
+    shares = 100
+    price = 490.1
+
+    '''
+    此处对原书代码做了修改,增加hasattr的判断，主要为避免
+    类实例读取__qualname__方法导致的异常
+    '''
     def as_csv(self):
-        return ','.join(str(getattr(self, name)) for name in self._order)
-
-
-class Stock(Structrue):
-    name = String()
-    shares = Integer()
-    price = Float()
-
-    def __init__(self, name, shares, price):
-        self.name = name
-        self.shares = shares
-        self.price = price
+        return ','.join(str(getattr(self, name)) for name in self._order if hasattr(self, name))
 
 
 if __name__ == '__main__':
-    s = Stock('Good', 100, 490.1)
-    stock_dict = Stock.__dict__
-    print(stock_dict)
-    print(getattr(Stock, '__qualname__'))
+    s = Stock()
+    # stock_dict = Stock.__dict__
+    # print(stock_dict)
+    # print(getattr(Stock, '__qualname__'))
     print(s.name)
     print(s.hello)
     print(s.as_csv())
