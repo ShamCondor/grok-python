@@ -15,6 +15,7 @@ __author__ = 'blackmatrix'
 总结:
 1.  __getattribute__ 可以无限制的访问类实例的所有属性。
     这里需要注意,是访问类实例而不是类对象,只对实例有效。
+    如果要对类对象自身产生效果,需要在元类中定义__getattribute__
 2.  如果同时定义了__getattr__和__getattribute__,
     __getattr__通常不会被调用,除非__getattribute__明确抛出
     AttributeErro 异常
