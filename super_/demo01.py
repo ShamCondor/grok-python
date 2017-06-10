@@ -12,9 +12,9 @@ __author__ = 'blackmatrix'
 class A:
 
     def __init__(self):
-        print('enter class A')
+        print('enter class_ A')
         super(A, self).__init__()
-        print('leave class A')
+        print('leave class_ A')
 
     @staticmethod
     def static_method():
@@ -22,7 +22,7 @@ class A:
 
     @classmethod
     def class_method(cls):
-        print('A class method')
+        print('A class_ method')
 
     def instance_method(self):
         print('A instance method')
@@ -31,14 +31,14 @@ class A:
 class B(A):
 
     def __init__(self):
-        print('enter class B')
+        print('enter class_ B')
         super(__class__, self).__init__()
         super(B, self).class_method()
-        print('leave class B')
+        print('leave class_ B')
 
     @staticmethod
     def static_method():
-        # super().instance_method()
+        # super_().instance_method()
         # python 3 中可以直接使用super()方法进行实例化，本质上它是接收两个参数
         # 第一个参数是这个方法所属类，或这个方法所属的实例的类(type)
         # 第二个参数，官方的类注释比较简单，<first argument>
@@ -47,7 +47,7 @@ class B(A):
         # 如果是在类方法中实例化super()，那么<first argument>就是类方法中的第一个参数cls
         # 如果是在静态方法中实例化super()，那么通常是不能正常运行的。除非特意将静态方法的第一个参数，
         # 设置成类的实例，或类的之类，否则都会因为不符合要求抛出如下异常
-        # TypeError: super(type, obj): obj must be an instance or subtype of type
+        # TypeError: super_(type, obj): obj must be an instance or subtype of type
         print('B static_method')
 
     @staticmethod
@@ -57,7 +57,7 @@ class B(A):
 
     @classmethod
     def class_method(cls):
-        print('B class method')
+        print('B class_ method')
 
     def instance_method(self):
         super().instance_method()
@@ -67,9 +67,9 @@ class B(A):
 class C(B):
 
     def __init__(self):
-        print('enter class C')
+        print('enter class_ C')
         super(B, self).__init__()
-        print('leave class C')
+        print('leave class_ C')
 
         print('-' * 20)
         # 可以调用类方法
@@ -86,7 +86,7 @@ class C(B):
         super(B, C).static_method()
         # 无法调用实例方法
         # TypeError: instance_method() missing 1 required positional argument: 'self'
-        # super(B, C).instance_method()
+        # super_(B, C).instance_method()
         # 应该是没有实例化，但是super对象不是可调用的，无法实例化
         print('-' * 20)
 
@@ -99,15 +99,15 @@ class C(B):
         print('-' * 20)
 
         # 无法调用类方法
-        # AttributeError: 'super' object has no attribute 'class_method'
-        # super(C).class_method()
+        # AttributeError: 'super_' object has no attribute 'class_method'
+        # super_(C).class_method()
         # 无法调用静态方法
-        # AttributeError: 'super' object has no attribute 'static_method'
-        # super(C).static_method()
+        # AttributeError: 'super_' object has no attribute 'static_method'
+        # super_(C).static_method()
         # 无法调用实例方法
-        # AttributeError: 'super' object has no attribute 'instance_method'
-        # super(C).instance_method()
-        # AttributeError: 'super' object has no attribute 'instance_method'
+        # AttributeError: 'super_' object has no attribute 'instance_method'
+        # super_(C).instance_method()
+        # AttributeError: 'super_' object has no attribute 'instance_method'
 
     @staticmethod
     def static_method2(value):
@@ -116,7 +116,7 @@ class C(B):
     @classmethod
     def class_method(cls):
         super(B, C).class_method()
-        print('C class method')
+        print('C class_ method')
 
     def instance_method(self):
         print('C instance method')

@@ -58,7 +58,7 @@ class OrderMeta(type):
     '''
     做个总结:
     1.  即使元类不需要__prepare__方法,在默认的元类type也会实现它,便于后续的子类通过super()调用
-    2.  __prepare__返回一个类dict对象, 用于在处理类定义体(evaluation of the class body)时,存储类的成员
+    2.  __prepare__返回一个类dict对象, 用于在处理类定义体(evaluation of the class_ body)时,存储类的成员
     3.  __prepare__可以返回一个普通的dict,获取自定义的映射型对象
     4.  __prepare__通常都需要加上类方法装饰器,因为它是在类对象(元类的实例)时创建的, 这个时候元类的实例(就是类对象)还没有创建出来,
         所以无法定义为实例方法

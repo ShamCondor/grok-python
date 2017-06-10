@@ -14,7 +14,7 @@ class ClassB(ClassA):
         # 可以访问到父类的类属性age
         print(super().age)
         # 不能访问name,因为name是父类实例的属性,和子类没什么关系
-        # print(super().name)
+        # print(super_().name)
 
 
 if __name__ == '__main__':
