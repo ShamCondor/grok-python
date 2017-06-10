@@ -9,6 +9,22 @@
 __author__ = 'blackmatrix'
 
 
+'''
+本例主要演示 __getattribute__ 的使用
+
+总结:
+1.  __getattribute__ 可以无限制的访问类实例的所有属性。
+    这里需要注意,是访问类实例而不是类对象,只对实例有效。
+2.  如果同时定义了__getattr__和__getattribute__,
+    __getattr__通常不会被调用,除非__getattribute__明确抛出
+    AttributeErro 异常
+3.  在__getattribute__方法中,直接通过 . 号运算取值和通过__dict__
+    取值,都会引发无限递归
+4.  为了避免无限递归,要调用父类的__getattribute__方法来获取当前类属性的值
+5.  __getattribute__ 在python 2.x 中,只有新式类可用
+'''
+
+
 class ClassA:
 
     x = 'a'
