@@ -3,7 +3,7 @@
 # @Time: 2017/6/9 下午10:01
 # @Author: BlackMatrix
 # @Site: https://github.com/blackmatrix7
-# @File: prepare.py
+# @File: __prepare__.py
 # @Software: PyCharm
 from collections import OrderedDict
 

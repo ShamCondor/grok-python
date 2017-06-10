@@ -3,7 +3,7 @@
 # @Time    : 2017/5/24 20:08
 # @Author  : Matrix
 # @Site    : 
-# @File    : getattribute.py
+# @File    : __getattribute__.py
 # @Software: PyCharm
 
 __author__ = 'blackmatrix'
