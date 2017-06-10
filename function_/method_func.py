@@ -9,7 +9,18 @@ from common_.decorator import test_decorator
 
 __author__ = 'blackmatrix'
 
-# 关于函数与方法的一些感想和测试
+'''
+本例验证函数与方法的区别
+
+概要:
+1.  函数(function)是Python中一个可调用对象(callable), 方法(method)是一种特殊的函数
+2.  类方法和实例方法都是 method
+3.  与类或实例绑定的才能称之为方法,静态方法没有和任何类或实例绑定,所以静态方法是个函数
+4.  装饰器不会改变被装饰函数或方法的类型
+5.  类实现__call__方法,其实例也不会变成方法或函数,依旧是类的实例
+6.  使用callalble() 只能判断对象是否可调用,不能判断是不是函数或方法
+7.  判断函数或方法应该使用type(obj)
+'''
 
 
 def the_function():
