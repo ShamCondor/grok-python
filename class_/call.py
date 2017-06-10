@@ -16,7 +16,7 @@ __author__ = 'blackmatrix'
 1.  __call__方法可以让一个实例像函数那样被调用
 2.  __call___是个实例方法,带self参数
 3.  __call__方法只对类实例有效,如果想对类生效,需在元类中定义
-4.  instance()相当于instance.__call__()
+4.  类定义了__call__方法后,实例instance()相当于instance.__call__()
 '''
 
 
