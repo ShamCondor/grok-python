@@ -47,7 +47,9 @@ class TheClass:
         pass
 
     def instance_method(self):
-        """实例方法"""
+        """
+        实例方法
+        """
         return self
 
     @staticmethod
@@ -115,11 +117,13 @@ if __name__ == '__main__':
     ''')
     #
     print('static_method type {type} '.format(type=type(TheClass.static_method)))
+    # static_method type <class 'function'>
     print('''
     直接打印这两种访问静态方法的方式， 发现它们并不是绑定方法
     ''')
     print(TheClass.static_method, the_class.static_method, sep='\n')
-
+    # <function TheClass.static_method at 0x0000024BC5EAD950>
+    # <function TheClass.static_method at 0x0000024BC5EAD950>
     print('''
     那么，结论就很清楚了，判断一个可调用对象，是函数还是方法，
     跟它类方法、实例方法、静态方法或者外部函数，都关系不大。
@@ -127,19 +131,20 @@ if __name__ == '__main__':
     绑定，即方法，如果未绑定，即函数。
     ''')
 
-    # 函数是Python中一个可调用对象，而方法是一种特殊的类函数
+    # 对于一个函数，因为不会和任何类或实例绑定（除非使用MethodType将函数绑定到某个实例上)
+    # 必然不是方法。
     print('the_function type {type} '.format(type=type(the_function)))
-    # 执行结果 the_function type <class_ 'function_'>
+    # the_function type <class_ 'function_'>
 
-    # 装饰器本身会不会改变被装饰函数的类型，编写个装饰器试试
-    # 测试，装饰器本身也是个函数
+    # 装饰器本身会不会改变被装饰函数的类型
+    # 装饰器本身也是个函数
     print('test_decorator type {type} '.format(type=type(test_decorator)))
-    # 执行结果 test_decorator type <class_ 'function_'>
+    # test_decorator type <class_ 'function_'>
 
     # 将装饰器装饰器到实例方法上
     # 检查被装饰的方法的类型
     print('decorated_func type {type} '.format(type=type(the_class.decorated_func)))
-    # 执行结果，依旧是方法 decorated_func type <class_ 'method'>
+    # decorated_func type <class_ 'method'>
     # 从测试结果得知，装饰器不会影响被装饰方法或函数的类型
 
     # 如果类实现__call__方法
@@ -147,7 +152,7 @@ if __name__ == '__main__':
     print('class_instance callable {callable} '.format(callable=callable(the_class)))
     # 实例的类型依旧是这个类，而不会变成函数或方法
     print('class_instance type {type} '.format(type=type(the_class)))
-    # 执行结果 class_instance type <class_ '__main__.TheClass'>
+    # class_instance type <class_ '__main__.TheClass'>
 
 
 
