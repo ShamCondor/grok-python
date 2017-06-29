@@ -126,7 +126,7 @@ if __name__ == '__main__':
     # <function TheClass.static_method at 0x0000024BC5EAD950>
     print('''
     那么，结论就很清楚了，判断一个可调用对象，是函数还是方法，
-    跟它类方法、实例方法、静态方法或者外部函数，都关系不大。
+    跟它是类方法、实例方法、静态方法或者外部函数，都关系不大。
     唯一的判断条件，就是这个对象，是否和某个类或实例进行绑定，如果
     绑定，即方法，如果未绑定，即函数。
     ''')
@@ -136,6 +136,9 @@ if __name__ == '__main__':
     print('the_function type {type} '.format(type=type(the_function)))
     # the_function type <class_ 'function_'>
 
+    """
+    关于装饰器的测试
+    """
     # 装饰器本身会不会改变被装饰函数的类型
     # 装饰器本身也是个函数
     print('test_decorator type {type} '.format(type=type(test_decorator)))
@@ -147,6 +150,9 @@ if __name__ == '__main__':
     # decorated_func type <class_ 'method'>
     # 从测试结果得知，装饰器不会影响被装饰方法或函数的类型
 
+    """
+    一个类实现__call__()方法，其实例既不会是方法也不会是函数
+    """
     # 如果类实现__call__方法
     # 执行结果True 其实例变为可调用对象
     print('class_instance callable {callable} '.format(callable=callable(the_class)))
