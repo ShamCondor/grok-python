@@ -43,6 +43,15 @@ def func_c(self):
     print('func_c', self)
 
 
+def func_d(a):
+    def _func_d(self, b):
+        nonlocal a
+        a = a + b
+        print(a)
+        print(self)
+    return _func_d
+
+
 if __name__ == '__main__':
     class_a = ClassA()
 
@@ -93,6 +102,26 @@ if __name__ == '__main__':
     print('所以就需要引入 MethodType，将一个函数绑定到实例或类上')
     class_b = ClassB()
     # MethodType 会在类内部创建一个链接，指向外部的的方法，在创建实例的同时，这个绑定后的方法也会复制到实例中
+    # MethodType 接受两个参数，第一个是被绑定的函数，第二个是需要绑定到的对象
     class_b.func_a = MethodType(func_a, class_b)
+    # <bound method func_a of <__main__.ClassB object at 0x0000021706F6B780>>
     print(class_b.func_a)
+    ClassB.func_b = MethodType(func_b, ClassB)
+    # <bound method func_b of <class '__main__.ClassB'>>
+    print(ClassB.func_b)
+
+    print('为什么说只是一个链接指向外部函数，而不是把函数复制到类内部？ 可以用闭包来验证')
+    # 同时将闭包func_d绑定到之前创建的实例 class_a, class_b上
+    test_func_d = func_d(1)
+    class_a.test_func_d = MethodType(test_func_d, class_a)
+    class_b.test_func_d = MethodType(test_func_d, class_b)
+    # 因为它们实际上是指向同一个函数
+    # 所以执行class_a.test_func_d(2)时，闭包中的变量 a 已经由 1 变为 1+2=3
+    # 接着执行class_b.test_func_d(3)时，闭包中的变量 a 已经由 3 变为 3+3=6
+    class_a.test_func_d(2)
+    class_b.test_func_d(3)
+
+
+
+
 
