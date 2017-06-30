@@ -91,4 +91,8 @@ if __name__ == '__main__':
     print('-' * 50)
 
     print('所以就需要引入 MethodType，将一个函数绑定到实例或类上')
+    class_b = ClassB()
+    # MethodType 会在类内部创建一个链接，指向外部的的方法，在创建实例的同时，这个绑定后的方法也会复制到实例中
+    class_b.func_a = MethodType(func_a, class_b)
+    print(class_b.func_a)
 
