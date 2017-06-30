@@ -119,7 +119,11 @@ if __name__ == '__main__':
     # 所以执行class_a.test_func_d(2)时，闭包中的变量 a 已经由 1 变为 1+2=3
     # 接着执行class_b.test_func_d(3)时，闭包中的变量 a 已经由 3 变为 3+3=6
     class_a.test_func_d(2)
+    # 3
     class_b.test_func_d(3)
+    # 6
+    print('实际执行结果验证了上面的推测，两个完全不同的实例，甚至连类都不同，通过MethodType绑定到实例上的函数，实际上是指向同一个函数')
+
 
 
 
