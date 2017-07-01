@@ -53,6 +53,7 @@ def func_d(a):
 
 
 if __name__ == '__main__':
+    # 创建实例 class_a
     class_a = ClassA()
 
     print('测试实例方法、静态方法、类方法与实例和类的关系')
