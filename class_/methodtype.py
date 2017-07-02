@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # @Time  : 2017/6/13 20:26
 # @Author  : BlackMatrix
+
 # @Site : 
 # @File : methodtype.py
 # @Software: PyCharm
