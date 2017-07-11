@@ -13,8 +13,9 @@ class ClosureInstance:
 
     def __init__(self, locals=None):
         if locals is None:
+            # 等同于函数内部获取的local()
             locals = sys._getframe(1).f_locals
-            self.__dict__.update((key, value) for key, value in locals.items() if callable(value))
+        self.__dict__.update((key, value) for key, value in locals.items() if callable(value))
 
     def __len__(self):
         return self.__dict__['__len__']()
@@ -33,7 +34,9 @@ def Stack():
     def __len__():
         return len(items)
 
-    return ClosureInstance()
+    _locals = locals()
+
+    return ClosureInstance(_locals)
 
 
 if __name__ == '__main__':
