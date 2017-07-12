@@ -16,8 +16,11 @@ __author__ = 'blackmatrix'
 2.  实现 __set__ 方法的类，称之为 覆盖型描述符， 没有实现 __set__ 方法的类，称之为非覆盖型描述符
 3.  同时实现 __set__ 和 __get__ 方法的类，通常称之为 强制描述符
 4.  实现 __set__ 方法的描述符，会接管实例属性的赋值操作，但是不能接管类属性的赋值操作。
-     如果需要接管类属性的赋值操作，需要通过在元类中定义描述符来实现
+     如果需要使用描述符接管类属性的赋值操作，需要通过在元类中定义描述符来实现
 5.  实现 __get__ 方法的描述符，会同时接管 类属性和 实例属性的赋值操作，这点和 4 不同
+6.  对于非覆盖型描述符（没有实现__set__方法），当实例对描述符同名属性进行赋值时，
+    不会触发描述符的__set___方法（本来就没有）， 而是直接在实例属性中，创建一个同名的变量。
+    对这个变量进行取值时，优先返回实例自身的属性，而不去访问类中的描述符，所以描述符的 __get__ 方法不会运行
 """
 
 
@@ -76,34 +79,34 @@ if __name__ == '__main__':
 
     spam = Spam()
 
-    # # 获取 实例的 强制描述符时，会发现描述符的 __get__ 方法被执行
-    # print(spam.over_all)
-    # # (<__main__.OverAll object at 0x000002C120637630>, <__main__.Spam object at 0x000002C1206376A0>, <class '__main__.Spam'>)
-    #
-    # # 获取实例的覆盖型描述符时，因为没有 __get__ 方法，直接获取到的是类属性，即描述符自身
-    # print(spam.only_set)
-    # # <__main__.OnlySet object at 0x000002C1206375F8>
-    #
-    # # 获取实例的非覆盖型描述符时，会发现描述符的 __get__ 方法被执行
-    # print(spam.only_get)
-    # # (<__main__.OnlyGet object at 0x000002C120637668>, <__main__.Spam object at 0x000002C1206376A0>, <class '__main__.Spam'>)
+    # 获取 实例的 强制描述符时，会发现描述符的 __get__ 方法被执行
+    print(spam.over_all)
+    # (<__main__.OverAll object at 0x000002C120637630>, <__main__.Spam object at 0x000002C1206376A0>, <class '__main__.Spam'>)
 
-    # # 对实例的强制描述符进行赋值
-    # # 发现描述符的 __set__ 被执行，打印出 "强制描述符 __set__ 被运行"
-    # spam.over_all = 1
-    # # 再进行取值，发现还是调用描述符的 __get__ 方法
-    # # 说明实例的属性读写，被强制描述符接管
-    # print(spam.over_all)
-    # # 强制描述符 __get__ 被运行
-    # # (<__main__.OverAll object at 0x000001899995C5C0>, <__main__.Spam object at 0x000001899995C630>, <class '__main__.Spam'>)
-    #
-    # # 对实例的覆盖性描述符进行赋值
-    # # 发现描述符的 __set__ 方法被执行，打印出 “覆盖型描述符 __set__ 被运行”
-    # spam.only_set = 2
-    # # 同样进行取值， 因为没有__get__方法，描述符不会接管实例属性的读取，
-    # # 所以还是直接通过类属性，返回描述符对象
-    # print(spam.only_set)
-    # # <__main__.OnlySet object at 0x000001A3C49575C0>
+    # 获取实例的覆盖型描述符时，因为没有 __get__ 方法，直接获取到的是类属性，即描述符自身
+    print(spam.only_set)
+    # <__main__.OnlySet object at 0x000002C1206375F8>
+
+    # 获取实例的非覆盖型描述符时，会发现描述符的 __get__ 方法被执行
+    print(spam.only_get)
+    # (<__main__.OnlyGet object at 0x000002C120637668>, <__main__.Spam object at 0x000002C1206376A0>, <class '__main__.Spam'>)
+
+    # 对实例的强制描述符进行赋值
+    # 发现描述符的 __set__ 被执行，打印出 "强制描述符 __set__ 被运行"
+    spam.over_all = 1
+    # 再进行取值，发现还是调用描述符的 __get__ 方法
+    # 说明实例的属性读写，被强制描述符接管
+    print(spam.over_all)
+    # 强制描述符 __get__ 被运行
+    # (<__main__.OverAll object at 0x000001899995C5C0>, <__main__.Spam object at 0x000001899995C630>, <class '__main__.Spam'>)
+
+    # 对实例的覆盖性描述符进行赋值
+    # 发现描述符的 __set__ 方法被执行，打印出 “覆盖型描述符 __set__ 被运行”
+    spam.only_set = 2
+    # 同样进行取值， 因为没有__get__方法，描述符不会接管实例属性的读取，
+    # 所以还是直接通过类属性，返回描述符对象
+    print(spam.only_set)
+    # <__main__.OnlySet object at 0x000001A3C49575C0>
 
     # 前面试验过，对实例的非覆盖性描述符取值，会返回描述符对象
     # 对实例的非覆盖描述符进行赋值，因为没有 __set__ 方法
