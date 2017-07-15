@@ -74,7 +74,12 @@ if __name__ == '__main__':
 
     @inlined_async
     def demo():
+        # 第一次send(None)时，生成器执行到此处暂停，
+        # 并且把yield右边的实例产出给调用者
+        # 调用者对Async中的实例进行"处理"之后，将处理的结果通过send(result)发送给生成器
+        # 此时生成器恢复执行，yield接受到发送的值，并赋值给yield左侧的变量 r
         r = yield Async(add, (2, 3))
+        # 最后把 r 打印出来
         print(r)
         r = yield Async(add, ('hello', 'python'))
         print(r)
