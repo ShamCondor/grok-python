@@ -77,6 +77,7 @@ class Spam:
 
 if __name__ == '__main__':
 
+    # 实例化Spam
     spam = Spam()
 
     # 获取 实例的 强制描述符时，会发现描述符的 __get__ 方法被执行
@@ -89,6 +90,7 @@ if __name__ == '__main__':
 
     # 获取实例的非覆盖型描述符时，会发现描述符的 __get__ 方法被执行
     print(spam.only_get)
+    # 非覆盖型描述符 __get__ 被运行
     # (<__main__.OnlyGet object at 0x000002C120637668>, <__main__.Spam object at 0x000002C1206376A0>, <class '__main__.Spam'>)
 
     # 对实例的强制描述符进行赋值
@@ -108,7 +110,7 @@ if __name__ == '__main__':
     print(spam.only_set)
     # <__main__.OnlySet object at 0x000001A3C49575C0>
 
-    # 前面试验过，对实例的非覆盖性描述符取值，会返回描述符对象
+    # 前面试验过，对实例的覆盖性描述符取值，会返回描述符对象
     # 对实例的非覆盖描述符进行赋值，因为没有 __set__ 方法
     # 所以描述符本身没有接管实例属性的赋值操作
     spam.only_get = 3
