@@ -5,8 +5,13 @@
 # @Site : 
 # @File : closure.py
 # @Software: PyCharm
-import  sys
+import sys
 __author__ = 'blackmatrix'
+
+
+"""
+把闭包模拟成类
+"""
 
 
 class ClosureInstance:
