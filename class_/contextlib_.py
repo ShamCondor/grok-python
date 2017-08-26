@@ -11,24 +11,26 @@ __author__ = 'blackmatrix'
 """
 本例来自《Python Cookbook》 9.22 以简单的方式定义上下文管理器
 
-主要验证以contextlib装饰器的方式，定义上下文管理器，遇到异常时，
-是否能正常执行__exit__代码块
+主要验证以contextlib装饰器的方式
 """
 
 
 @contextmanager
 def list_transaction(orig_list):
+    # 因为list是可变类型，所以通过list(orig_list)，对值进行复制，创建一个新的list，即working。
     working = list(orig_list)
     '''
-    因为list是可变类型，所以需要先对list进行一次复制，创建出复制后的变量working
-    上下文管理器函数执行到yield时会暂停，在yield之前，包括yield working，
-    都等同于__enter__代码块。
-    yield working 会将复制出来的 working 产出，等同于__enter__代码块的return working
-    当函数执行到 yield 时暂停，此时开始执行上下文中的代码
-    当执行完毕，且没有异常时，上下文管理器中的 yield 恢复执行
-    开始执行yield之后的代码，将修改后的working赋值给orig_list，改变orig_list的值。
-    如果执行过程有异常抛出（重要！），那么yield之后的代码不会执行，那么orig_list不会被修改
-    从而实现事务的效果
+    以yield为分隔，在yield之前的代码，包括yield working，会在contextmanager装饰器的__enter__方法中被调用。
+    代码在执行到yield时暂停，同时yield working，会将working产出。yield产出的值，作为__enter__的返回值，赋值给as之后的变量。
+    
+    当with块的代码执行完成后（且没有出现未被处理的异常）， 上下文管理器会在yield处恢复，继续执行yield之后的代码，
+    将修改后的working赋值给orig_list，改变orig_list的值。
+    
+    如果with代码块的代码执行出现异常且未被处理时，contextmanager装饰器的__exit__方法会将获取到的异常对象，通过throw方法传递给
+    生成器函数。
+    此时yield接收到一个异常信息，如果不能处理异常，则yield之后的代码不会执行。
+    通常情况下，yield语句应该在try...except中，用于处理with代码块内可能抛出的异常。
+    但是在这个例子中，希望在出现异常时，不对orig_list进行修改，以实现事务效果，在这个例子里是正常的。
     '''
     yield working
     orig_list[:] = working
@@ -78,12 +80,14 @@ if __name__ == '__main__':
     print(items_3)
 
     """
-    重要！ 这是两种上下文管理器中非常重要的差别！书中没有提及！
-    当执行过程中出现异常时，这种时候的执行结果与list_transaction这个函数完全不同。
-    list_transaction 不能处理上下文内出现异常的情况，直接会导致 yield 之后的代码不会执行
-    而 一般来说，我们编写的上下文管理器（类），__exit__方法在出现异常时，也可以正常执行
-    所以在第4个例子中，输出的items_4，仍旧是被修改后的list，并没有实现事务
-    （除非在 __exit__ 代码块中对出现异常的情况做些判断）
+    两种上下文管理器，最大的区别在于对异常的处理。
+    
+    实现上下文管理器协议的类，__exit__方法在出现异常时，也可以正常执行。
+    
+    而以生成器函数实现的上下文管理器，在出现异常时，装饰器的__exit__方法会将异常传递给生成器函数。
+    如果生成器函数不能正确处理传递过来的异常，则yield之后的代码不会执行。
+    所以通常情况下，yield应在try...except中执行，用于处理异常信息。
+    除非设计之初就打算让yield之后的代码在with代码块内出现异常时不被执行。
     """
     items_4 = [1, 2, 3]
     try:
