@@ -5,7 +5,7 @@
 # @Site : 
 # @File : methodcaller.py
 # @Software: PyCharm
-from  operator import methodcaller
+from operator import methodcaller
 __author__ = 'blackmatrix'
 
 """
