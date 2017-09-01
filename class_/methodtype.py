@@ -100,7 +100,7 @@ if __name__ == '__main__':
 
     print('-' * 50)
 
-    print('所以就需要引入 MethodType，将一个函数绑定到实例或类上')
+    print('所以就需要引入 MethodType，将一个可调用对象绑定到实例或类上')
     class_b = ClassB()
     # MethodType 会在类内部创建一个链接，指向外部的的方法，在创建实例的同时，这个绑定后的方法也会复制到实例中
     # MethodType 接受两个参数，第一个是被绑定的函数，第二个是需要绑定到的对象
@@ -111,7 +111,7 @@ if __name__ == '__main__':
     # <bound method func_b of <class '__main__.ClassB'>>
     print(ClassB.func_b)
 
-    print('为什么说只是一个链接指向外部函数，而不是把函数复制到类内部？ 可以用闭包来验证')
+    print('为什么说只是一个链接指向外部的可调用对象，而不是把函数复制到类内部？ 可以用闭包来验证')
     # 同时将闭包func_d绑定到之前创建的实例 class_a, class_b上
     test_func_d = func_d(1)
     class_a.test_func_d = MethodType(test_func_d, class_a)
@@ -123,7 +123,7 @@ if __name__ == '__main__':
     # 3
     class_b.test_func_d(3)
     # 6
-    print('实际执行结果验证了上面的推测，两个完全不同的实例，甚至连类都不同，通过MethodType绑定到实例上的函数，实际上是指向同一个函数')
+    print('实际执行结果验证了上面的推测，两个完全不同的实例，甚至连类都不同，通过MethodType绑定到实例上的可调用对象，实际上是指向同一个可调用对象')
 
 
 
