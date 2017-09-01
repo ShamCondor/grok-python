@@ -112,6 +112,7 @@ if __name__ == '__main__':
 
     print('对实例的__dict__进行赋值，会绕过描述符')
     spam.__dict__['only_set'] = '描述符不会执行'
+    print(spam.only_set)
     print(type(spam.only_set))
 
     # 前面试验过，对实例的覆盖性描述符取值，会返回描述符对象
