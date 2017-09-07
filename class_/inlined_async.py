@@ -5,6 +5,7 @@
 # @Site: https://github.com/blackmatrix7
 # @File: inlined_async
 # @Software: PyCharm
+from time import sleep
 from queue import Queue
 from functools import wraps
 
@@ -26,6 +27,7 @@ __author__ = 'blackmatrix'
 def apply_async(func, args, *, callback):
     result = func(*args)
     callback(result)
+    sleep(10)
 
 
 class Async:
@@ -38,16 +40,18 @@ class Async:
 def inlined_async(func):
     @wraps(func)
     def wrapper(*args):
+        # 执行被装饰的函数，因为被装饰的函数带有yield，是生成器函数
+        # 所以会产出一个生成器对象
         f = func(*args)
+        # 声明一个队列，初始时，向队列推送一个None
         result_queue = Queue()
-        # 初始时，向队列推送一个None
         result_queue.put(None)
         while True:
             '''
             从队列中取值，第一次取值时，会取出之前的None
-            f.send(None)相当于 next(f)，用于预计活协程
+            f.send(None)相当于next(f)，用于预计活协程
             协程被激活后，生成器执行到第一个yield处暂停
-            并产出Async类的实例，赋值给变量 a
+            并产出Async类的实例，赋值给变量a
             '''
             result = result_queue.get()
             try:
@@ -67,27 +71,30 @@ def inlined_async(func):
     return wrapper
 
 
+def add(x, y):
+    return x + y
+
+
+@inlined_async
+def demo():
+    # 第一次send(None)时，生成器执行到此处暂停，
+    # 并且把yield右边的实例产出给调用者
+    # 调用者对Async中的实例进行"处理"之后，将处理的结果通过send(result)发送给生成器
+    # 此时生成器恢复执行，yield接受到发送的值，并赋值给yield左侧的变量 r
+    r = yield Async(add, (2, 3))
+    # 最后把 r 打印出来
+    print(r)
+    r = yield Async(add, ('hello', 'python'))
+    print(r)
+    for n in range(10):
+        r = yield Async(add, (n, n))
+        print(r)
+
+    print('Goodbye')
+
 if __name__ == '__main__':
-
-    def add(x, y):
-        return x + y
-
-    @inlined_async
-    def demo():
-        # 第一次send(None)时，生成器执行到此处暂停，
-        # 并且把yield右边的实例产出给调用者
-        # 调用者对Async中的实例进行"处理"之后，将处理的结果通过send(result)发送给生成器
-        # 此时生成器恢复执行，yield接受到发送的值，并赋值给yield左侧的变量 r
-        r = yield Async(add, (2, 3))
-        # 最后把 r 打印出来
-        print(r)
-        r = yield Async(add, ('hello', 'python'))
-        print(r)
-        for n in range(10):
-            r = yield Async(add, (n, n))
-            print(r)
-
-        print('Goodbye')
-
+    import multiprocessing
+    pool = multiprocessing.Pool()
+    apply_async = pool.apply_async
     demo()
 

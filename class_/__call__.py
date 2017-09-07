@@ -23,7 +23,8 @@ __author__ = 'blackmatrix'
 class ClassMeta(type):
 
     def __call__(cls, *args, **kwargs):
-        print('call')
+        instance = cls.__new__(*args, **kwargs)
+        instance()
 
 
 class ClassA:
@@ -33,7 +34,7 @@ class ClassA:
 
 
 class ClassB(metaclass=ClassMeta):
-    pass
+        print('call ClassB instance')
 
 
 if __name__ == '__main__':
