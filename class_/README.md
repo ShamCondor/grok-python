@@ -32,11 +32,11 @@ if __name__ == '__main__':
 
 #### `__getattribute__` 方法
 
-1. \__getattribute__可以无限制的访问**类实例**的所有属性。这里需要注意,是访问类实例而不是类对象,只对实例有效
-2. 如果要对类对象自身产生效果，需要在元类中定义\__getattribute__
-3. 如果同时定义`__getattr__` 和 `__getattribute__`，`__getattr__`通常不会被调用。除非`__getattribute__`明确抛出AttributeErro 异常。在__getattribute__方法中,直接通过 . 号运算取值和通过\__dict__取值,都会引发无限递归
-4. 为了避免无限递归,要调用父类的\__getattribute__方法来获取当前类属性的值
-5.  \__getattribute__ 在python 2.x 中,只有新式类可用
+1. `__getattribute__`可以无限制的访问**类实例**的所有属性。这里需要注意,是访问类实例而不是类对象,只对实例有效
+2. 如果要对类对象自身产生效果，需要在元类中定义`__getattribute__`
+3. 如果同时定义`__getattr__` 和 `__getattribute__`，`__getattr__`通常不会被调用。除非`__getattribute__`明确抛出AttributeError 异常。在`__getattribute__`方法中,直接通过 . 号运算取值和通过`__dict__`取值,都会引发无限递归
+4. 为了避免无限递归,要调用父类的`__getattribute__`方法来获取当前类属性的值
+5.  `__getattribute__` 在python 2.x 中,只有新式类可用
 
 ```python
 class ClassA:
