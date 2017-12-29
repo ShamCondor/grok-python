@@ -66,7 +66,7 @@ class Teacher(Person):
     def age(self, value):
         print('teacher property age setter')
         self._age = value
-        
+
 
 '''
 上面的方法,其实有个缺陷,我们必须清楚的知道,需要重写的propery所属的父类
