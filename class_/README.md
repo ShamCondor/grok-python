@@ -1,11 +1,11 @@
 # Python 笔记 - class
 
-#### \__call__ 方法
+#### `__call__` 方法
 
-1. \__call__ 方法可以让一个实例像函数那样被调用
-2. \__call__ 是个实例方法,带self参数
-3. \__call__方法只对类实例有效,如果想对类生效,需在元类中定义
-4. 类定义了\__call__ 方法后，调用实例instance() 相当于`instance.__call__()`
+1. `__call__` 方法可以让一个实例像函数那样被调用
+2. `__call__` 是个实例方法,带self参数
+3. `__call__`方法只对类实例有效,如果想对类生效,需在元类中定义
+4. 类定义了`__call__` 方法后，调用实例 `instance()` 相当于`instance.__call__()`
 
 ```python
 class ClassA:
@@ -30,7 +30,7 @@ if __name__ == '__main__':
     print(callable(a))
 ```
 
-#### \__getattribute__ 方法
+#### `__getattribute__` 方法
 
 1. \__getattribute__可以无限制的访问**类实例**的所有属性。这里需要注意,是访问类实例而不是类对象,只对实例有效
 2. 如果要对类对象自身产生效果，需要在元类中定义\__getattribute__
