@@ -84,7 +84,7 @@ if __name__ == '__main__':
 
     print('通过将函数赋值给类属性，尝试将一个函数绑定到类或实例上')
     ClassA.func_a = func_a
-    # 直接将函数赋值给类，不会创建类与函数的绑定关系
+    # 直接将函数赋值给类，不会创建类与函数的绑定关系，相当于实例方法
     # <function func_a at 0x10e41ff28>
     print(ClassA.func_a)
 
