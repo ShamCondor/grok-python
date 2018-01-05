@@ -125,6 +125,8 @@ if __name__ == '__main__':
 1. 如果直接将函数赋值给类，不会创建类与函数的绑定关系，相当于静态方法
 
    ```python
+   # 创建实例 class_a
+   class_a = ClassA()
    ClassA.func_a = func_a
    # 直接将函数赋值给类，不会创建类与函数的绑定关系
    # <function func_a at 0x10e41ff28>
@@ -133,15 +135,26 @@ if __name__ == '__main__':
 
 2. 对于赋值之前创建的实例，因为是通过实例访问，实例不存在这个方法，会调用类中的方法，所以也会存在绑定关系
 
-   ​
+   ```python
+   # 对于赋值之前创建得实例，因为是通过实例访问，所以也会存在绑定关系
+   # <bound method func_a of <__main__.ClassA object at 0x10e4330b8>>
+   print(class_a.func_a)
+   ```
 
 3. 直接将函数赋值实例，不会创建绑定关系，没有绑定关系，通过实例调用函数不会传入self
 
-```
-ClassA.func_a = func_a
-# 直接将函数赋值给类，不会创建类与函数的绑定关系
-# <function func_a at 0x10e41ff28>
-print(ClassA.func_a)
-```
+   ```python
+   class_a.func_c = func_c
+   # <function func_c at 0x10e59f1e0>
+   print(class_a.func_c)
+   # 下面的调用方式，因为没有绑定关系，无法获取到实例自身，即不会作为self传入
+   # class_a.func_c()
+   ```
 
-MethodType 将一个方法绑定到类或实例上
+#### MethodType 将一个可调用对象绑定到类或实例上
+
+上面的例子可以看出，手动将函数赋值给类或实例，并不能保证成功创建绑定关系，所以就需要引入MethodType，用于将一个可调用对象绑定到类或实例上。
+
+1. MethodType 接受两个参数，第一个是被绑定的函数，第二个是需要绑定到的对象
+2. MethodType 会在类内部创建一个链接，指向外部的的方法，在创建实例的同时，这个绑定后的方法也会复制到实例中
+
