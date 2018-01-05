@@ -41,7 +41,7 @@ class Man(Person):
 
 class Student(Person):
 
-    # 如果在子类重新定义一个property,会完全重写掉父类的同名的property,包括里面的方法
+    # 如果在子类重新定义一个property,会完全重写掉父类的同名的property,包括里面的所有方法
     # 所以没有定义setter方法,age变为只读,无法赋值
     # 实际上,这种方式是在子类重新创建了一个名为age的property对象,重写掉了父类名为age的property
     # age = property(fget=..., fset=None)

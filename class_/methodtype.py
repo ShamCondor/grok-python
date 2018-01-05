@@ -87,6 +87,7 @@ if __name__ == '__main__':
     # 直接将函数赋值给类，不会创建类与函数的绑定关系
     # <function func_a at 0x10e41ff28>
     print(ClassA.func_a)
+
     # 对于赋值之前创建得实例，因为是通过实例访问，所以也会存在绑定关系
     # <bound method func_a of <__main__.ClassA object at 0x10e4330b8>>
     print(class_a.func_a)
