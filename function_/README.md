@@ -1,6 +1,6 @@
 # Python笔记 - function、method
 
-### 闭包
+## 闭包
 
 闭包是在其词法上下文中引用了自由变量的函数。
 
@@ -74,11 +74,11 @@ print(avg_cls(6))
 # 12.0
 ```
 
-### 函数签名
+## 函数签名
 
 函数签名对象，表示调用函数的方式，即定义了函数的输入和输出。
 
-#### 获取函数签名及参数
+### 获取函数签名及参数
 
 使用标准库的signature方法，获取函数签名对象；通过函数签名的parameters属性，获取函数参数。
 
@@ -95,7 +95,7 @@ foo_sig = signature(foo)
 foo_params = foo_sig.parameters
 ```
 
-#### 创建函数签名
+### 创建函数签名
 
 使用类Parameter的实例创建函数参数列表；使用Signature类，接受函数参数列表，实例化出函数签名实例。
 
@@ -114,7 +114,7 @@ parms = [Parameter('x', Parameter.POSITIONAL_OR_KEYWORD),
 sig = Signature(parms)
 ```
 
-#### 检查函数参数是否匹配签名
+### 检查函数参数是否匹配签名
 
 使用函数签名的bind的方法，检查函数参数是否匹配签名。
 
