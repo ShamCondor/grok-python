@@ -43,17 +43,20 @@ parms = [Parameter('x', Parameter.POSITIONAL_OR_KEYWORD),
 sig = Signature(parms)
 
 
-def func(*args, **kwargs):
-    # bind 方法, 创建一个签名中的参数映射到函数接受的参数中。
-    # 在这个例子中,将外部定义的parms建立映射,绑定到函数接收的参数中。
-    # 当函数参数与签名中的参数相匹配时,返回BoundArguments对象,
-    # 反之则抛出 TypeError
-    bound_value = sig.bind(*args, **kwargs)
-    for name, value in bound_value.arguments.items():
-        print(name, value)
-
 if __name__ == '__main__':
-    func(1, 2, z=3)
-    func(1, 2)
+    bound_args_01 = sig.bind(1, 2, z=3)
+    # <BoundArguments (x=1, y=2, z=3)>
+    bound_args_02 = sig.bind(1, 2)
+    # <BoundArguments (x=1, y=2)>
     # 引发异常
-    # func(1)
+    try:
+        bound_args_03 = sig.bind(1)
+    except TypeError as ex:
+        print(ex)
+        # missing a required argument: 'y'
+    # 获取函数参数的内容
+    for name, value in bound_args_01.arguments.items():
+        print(name, value)
+    # x 1
+    # y 2
+    # z 3

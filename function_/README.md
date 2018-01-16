@@ -116,5 +116,19 @@ sig = Signature(parms)
 
 使用函数签名的bind的方法，检查函数参数是否匹配签名。
 
+延续上面的例子，通过函数签名的bind方法，接受函数参数，如果匹配，返回参数BoundArguments实例，如果不匹配，则抛出TypeError，并给出详细的异常信息。
+
+通过BoundArguments实例的属性，可以获取函数签名、参数的值等内容。
+
+```python
+bound_args_01 = sig.bind(1, 2, z=3)
+# <BoundArguments (x=1, y=2, z=3)>
+bound_args_02 = sig.bind(1, 2)
+# <BoundArguments (x=1, y=2)>
+bound_args_03 = sig.bind(1)
+# TypeError
+# missing a required argument: 'y'
+```
+
 
 
