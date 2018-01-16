@@ -13,7 +13,7 @@ __author__ = 'blackmatrix'
 """
 
 
-def averager(value):
+def averager():
     """
     闭包实现求平均值的例子
     每次传入一个数字，返回所有传入的数字的平均值
@@ -24,21 +24,23 @@ def averager(value):
     total = 0.0
     average = None
 
-    def _averager():
+    def _averager(value):
         nonlocal total, count, average
         total += value
         count += 1
         average = total/count
         return average
 
-    return _averager()
+    return _averager
 
-print(averager(10))
+
+avg = averager()
+print(avg(10))
 # 10.0
-print(averager(20))
-# 20.0
-print(averager(5))
-# 10.0
+print(avg(20))
+# 15.0
+print(avg(6))
+# 12.0
 
 
 class ClosureInstance:
