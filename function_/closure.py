@@ -8,13 +8,43 @@
 import sys
 __author__ = 'blackmatrix'
 
+"""
+闭包的一些例子
+"""
 
-"""
-把闭包模拟成类
-"""
+
+def averager(value):
+    """
+    闭包实现求平均值的例子
+    每次传入一个数字，返回所有传入的数字的平均值
+    :param value: 传入的数字
+    :return:
+    """
+    count = 0
+    total = 0.0
+    average = None
+
+    def _averager():
+        nonlocal total, count, average
+        total += value
+        count += 1
+        average = total/count
+        return average
+
+    return _averager()
+
+print(averager(10))
+# 10.0
+print(averager(20))
+# 20.0
+print(averager(5))
+# 10.0
 
 
 class ClosureInstance:
+    """
+    把闭包模拟成类
+    """
 
     def __init__(self, locals=None):
         if locals is None:
