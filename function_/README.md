@@ -44,7 +44,7 @@ print(avg(6))
 # 12.0
 ```
 
-上面的例子中，最重要的部分在调用外层函数averager时，需要返回内层函数的对象_averager，注意这里的`return _averager`没有括号，并不是调用内层函数，而是返回内层函数的对象。
+上面的例子中，最重要的部分在调用外层函数averager时，需要返回内层函数的对象`_averager`，注意这里的`return _averager`没有括号，并不是调用内层函数，而是返回内层函数的对象。
 
 当调用外层函数，返回内层函数对象时，即形成闭包。每次对内层函数的调用，外层函数中的变量的值，都会被记住，即保持上次调用的结果。
 
@@ -73,4 +73,48 @@ print(avg_cls(20))
 print(avg_cls(6))
 # 12.0
 ```
+
+### 函数签名
+
+#### 获取函数签名及参数
+
+使用标准库的signature方法，获取函数签名对象；通过函数签名的parameters属性，获取函数参数。
+
+```python
+# 注意是小写的signature
+from inspect import signature
+
+def foo(value):
+    return value
+
+# 获取函数签名
+foo_sig = signature(foo)
+# 通过函数签名的parameters属性，可以获取函数参数
+foo_params = foo_sig.parameters
+```
+
+#### 创建函数签名
+
+使用类Parameter的实例创建函数参数列表；使用Signature类，接受函数参数列表，实例化出函数签名实例。
+
+```Python
+# 注意是首字母大写的Signature
+from inspect import Signature, Parameter
+
+# 创建一个函数参数列表，列表内的元素由类Parameter的实例组成
+# Parameter实例化时，依次接受参数名、参数类型、默认值和参数注解
+# 默认值和参数类型默认为空，这里的空值不是None，而是Parameter.empty，代表没有值
+parms = [Parameter('x', Parameter.POSITIONAL_OR_KEYWORD),
+         Parameter('y', Parameter.POSITIONAL_OR_KEYWORD),
+         Parameter('z', Parameter.KEYWORD_ONLY, default=9)]
+
+# 使用Signature类，接受函数参数列表，实例化出函数签名实例
+sig = Signature(parms)
+```
+
+#### 检查函数参数是否匹配签名
+
+使用函数签名的bind的方法，检查函数参数是否匹配签名。
+
+
 
