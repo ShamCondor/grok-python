@@ -21,8 +21,8 @@ __author__ = 'blackmatix'
 '''
 
 
-def foo(value):
-    return value
+def foo(val):
+    return val
 
 # 获取函数签名
 foo_sig = signature(foo)
