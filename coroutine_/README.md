@@ -35,11 +35,15 @@ print(avg1.send(30))
 # 20.0
 ```
 
-yield在函数中，起到一个函数流程控制的作用。
+这里yield可以理解为连接调用者和生成器的运输小车，只不过运输的不是货物，而是数据。预激活生成器时，相当于调用者打电话给生成器，让他把小车开到调用者这里等待接收货物（代码执行到yield处暂停），这个时候，如果生成器有什么货物（数据）需要运输给调用者，那么可以顺带把货物捎带过去（`yield average` 产出值），当然也有可能是空车驶到调用者这里（yield右侧没有产出任何变量）。
+
+接着，调用者需要将货物（数据）运输给生成器，那么就是重新让小车把货物运送给生成器（调用生成器的.send()方法）。生成器接收到yield小车运输过来的货物之后（`value = yield`），总之可以开始生产、销售或者其他事情(求平均值)。当生成器这些事情都做完后，又重新将小车开回到调用者这一方，并暂停，等待接收调用者的下一个指令，如此往返。
+
+**逐行解读上一个例子的代码**：
 
 首先，调用生成器函数，创建一个生成器对象avg。然后对生成器对象进行预激活，这里的预激活指的是让生成器对象执行到yield除，然后会暂停。因为生成器对象只有在yield除暂停时，才能接收到调用者通过send方法发送给生成器的值，所以没有进行预激活的生成器对象无法正常工作。
 
-这里yield起到一个类似桥梁的作用，连接生成器调用者，和生成器对象内部的变量。我们知道，python的赋值语句，是从右向左执行的，所以在这里例子中，`yield average`会先执行，将average产出。
+我们知道，python的赋值语句，是从右向左执行的，所以在这里例子中，`yield average`会先执行，将average产出。
 
 这个时候程序的控制器转交给调用者，继续执行print语句，所以`print(next(avg))`会输出yield产出的值，即average，输出0.00。
 
@@ -156,3 +160,80 @@ except TypeError:
 ```
 
 ### 调用.close()方法终止循环
+
+close()方法，实际上是让生成器在yield出抛出GeneratorExit异常。
+
+不过和直接.throw(GeneratorExit)不同的是，通过close让生成器抛出GeneratorExit后，生成器不能再产出任何值，否则会引发RuntimeError: generator ignored GeneratorExit。
+
+```Python
+# 对第三个函数averager3进行修改，改为捕获GeneratorExit异常并忽略
+def averager4():
+    """
+    使用yield接收数值，并求平均值
+    对第三个函数averager3进行修改，改为捕获GeneratorExit异常并忽略
+    :return:
+    """
+    count = 0
+    total = 0.0
+    average = 0.0
+    while True:
+        try:
+            value = yield average
+            count += 1
+            total += value
+            average = total/count
+        except GeneratorExit:
+            # 如果捕获到GeneratorExit，什么都不做
+            # 这样生成器会继续循环，直到再次遇到yield
+            # 因为调用close后不允许再次yield，所以会抛出
+            # RuntimeError: generator ignored GeneratorExit
+            pass
+avg4 = averager4()
+next(avg4)
+print(avg4.send(10))
+print(avg4.send(20))
+avg4.close()
+# RuntimeError: generator ignored GeneratorExit
+```
+
+如果是直接.throw(GeneratorExit)，那么遵循上述的规范，如果生成器处理了这个异常，循环继续；如果生成器无法的处理这个异常，循环终止。
+
+**通常情况下，生成器不应该捕获这个异常，或者捕获这个异常后应抛出StopItreation异常，否则调用方会报错。**
+
+## 协程返回值
+
+协程是通过抛出StopIteration来返回值，StopIteration第一个值就是异常的返回值。
+
+```python
+def averager5():
+    """
+    使用yield接收数值，并求平均值
+    修改averager2，每次yield不再产出平均数
+    而是改为协程结束后再返回
+    :return:
+    """
+    count = 0
+    total = 0.0
+    average = 0.0
+    while True:
+        value = yield
+        # 当value为None时，退出循环
+        if value is None:
+            break
+        count += 1
+        total += value
+        average = total/count
+    return average
+
+avg5 = averager5()
+next(avg5)
+avg5.send(10)
+avg5.send(20)
+try:
+    # 发送None，结束协程，同时捕获StopIteration异常
+    avg5.send(None)
+except StopIteration as ex:
+    print(ex)
+    # 15
+```
+

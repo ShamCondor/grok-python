@@ -89,7 +89,6 @@ except StopIteration:
 1.  将一个异常直接发送给生成器，会导致生成器在yield处暂停时，出现异常
 2.  如果生成器能处理传入的异常，那么生成器的代码会继续执行，直到下一次遇到yield表达式暂停
 3.  如果生成器不能正确处理这个异常，那么会将异常抛出，返回给调用者
-4.  如果收到了GeneratorExit异常，生成器不能返回值，否则会引发RuntimeError异常
 """
 
 
@@ -134,6 +133,14 @@ except TypeError:
     print('生成器无法处理TypeError，异常向上冒泡抛出，循环终止')
 
 
+"""
+close()方法，实际上是让生成器在yield出抛出GeneratorExit异常。
+不过和直接.throw(GeneratorExit)不同的是，
+通过close让生成器抛出GeneratorExit后，生成器不能再产出任何值，
+否则会引发RuntimeError: generator ignored GeneratorExit。
+"""
+
+
 # 对第三个函数averager3进行修改，改为捕获GeneratorExit异常并忽略
 def averager4():
     """
@@ -152,12 +159,53 @@ def averager4():
             average = total/count
         except GeneratorExit:
             # 如果捕获到GeneratorExit，什么都不做
-            # 这样生成器会继续循环，直到再次遇到yield暂停
-            yield 5
+            # 这样生成器会继续循环，直到再次遇到yield
+            # 因为调用close后不允许再次yield，所以会抛出
+            # RuntimeError: generator ignored GeneratorExit
+            pass
 avg4 = averager4()
 next(avg4)
 print(avg4.send(10))
 print(avg4.send(20))
-avg4.throw(GeneratorExit)
+try:
+    avg4.close()
+except RuntimeError as ex:
+    print(ex)
+    # RuntimeError: generator ignored GeneratorExit
 
 
+"""
+协程是通过抛出StopIteration来返回值，StopIteration第一个值就是异常的返回值。
+"""
+
+
+def averager5():
+    """
+    使用yield接收数值，并求平均值
+    修改averager2，每次yield不再产出平均数
+    而是改为协程结束后再返回
+    :return:
+    """
+    count = 0
+    total = 0.0
+    average = 0.0
+    while True:
+        value = yield
+        # 当value为None时，退出循环
+        if value is None:
+            break
+        count += 1
+        total += value
+        average = total/count
+    return average
+
+avg5 = averager5()
+next(avg5)
+avg5.send(10)
+avg5.send(20)
+try:
+    # 发送None，结束协程，同时捕获StopIteration异常
+    avg5.send(None)
+except StopIteration as ex:
+    print(ex)
+    # 15
