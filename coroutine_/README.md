@@ -237,3 +237,25 @@ except StopIteration as ex:
     # 15
 ```
 
+## yield from
+
+yield from是python 3.3加入的语法，先看一个很简单的例子：
+
+```python
+def foo1():
+    yield from [1, 2, 3, 4, 5]
+
+
+def foo2():
+    for var in [1, 2, 3, 4, 5]:
+        yield var
+
+print(list(foo1()))
+print(list(foo2()))
+# [1, 2, 3, 4, 5]
+```
+
+上面两个生成器的输出是相同的，这里的yield from只是起到一个简化for循环的作用。
+
+**但是，yield from的真正价值并不是简化for循环的语法糖，而是打通调用者和子生成器之间的管道。**
+
