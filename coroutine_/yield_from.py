@@ -67,18 +67,12 @@ def averager2():
     :return:
     """
     value_list = yield
-
-
-for items in items_list:
     avg = averager()
-    next(avg)
-    for item in items:
-        avg.send(item)
+    for value in value_list:
+        next(avg)
+        avg.send(value)
     else:
-        try:
-            avg.throw(StopIteration)
-        except StopIteration as ex:
-            print(ex)
+        avg.close()
 
 
 def grouper():
