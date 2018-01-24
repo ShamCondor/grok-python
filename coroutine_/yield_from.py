@@ -121,4 +121,3 @@ try:
 except StopIteration as ex:
     print(ex.value)
     # 42.0
-
