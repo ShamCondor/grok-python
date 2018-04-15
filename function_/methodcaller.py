@@ -28,6 +28,7 @@ class A:
 class B:
     pass
 
+
 if __name__ == '__main__':
     # 返回可调用对象f，f接受一个对象，并调用它的func_a方法，并返回结果
     f = methodcaller('func_a', 'hello', word='python')
