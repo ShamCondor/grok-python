@@ -37,6 +37,11 @@ class Man(Person):
     pass
 
 
+# 此例子说明property是可以被继承的
+class Boy(Person):
+    pass
+
+
 class Student(Person):
 
     # 如果在子类重新定义一个property,会完全重写掉父类的同名的property,包括里面的所有方法
@@ -92,9 +97,10 @@ class PythonTestCase(unittest.TestCase):
     def setUp(self):
         self.man = Man(22)
 
-    def test_property(self):
+    def test_init_class(self):
         # init的时候并没有执行setter方法,所以年龄不会变
-        self.assertEqual(self.man.age, 22)
+        self.man = Man(35)
+        self.assertEqual(self.man.age, 35)
 
     def test_set_tom_age(self):
         # 赋值的时候触发了setter方法,年龄x2
@@ -106,43 +112,34 @@ class PythonTestCase(unittest.TestCase):
         with self.assertRaises(AttributeError):
             self.man.name = 'tom'
 
-    # def test_set_person_age(self):
-    #     self.assertTrue(isinstance(Person.age, property))
-    #     # 给类赋值一个与property的同名属性时,会重写掉原先的特性
-    #     Person.age = 24
-    #     self.assertEqual(Person.age, 24)
-    #     self.assertTrue(type(Person.age) is int)
+    def test_set_person_age(self):
+        # 如果没有实例,property会返回自身
+        self.assertTrue(isinstance(Boy.age, property))
+        # 给类赋值一个与property的同名属性时,会重写掉原先的特性
+        Boy.age = 24
+        self.assertEqual(Boy.age, 24)
+        self.assertTrue(type(Boy.age) is int)
+
+    def test_set_student_age(self):
+        lilei = Student(age=12)
+        self.assertEqual(lilei.age, 12)
+        # 无法赋值,报错
+        with self.assertRaises(AttributeError):
+            lilei.age = 13
+
+    def test_set_teacher_age(self):
+        teacher = Teacher(age=28)
+        self.assertEqual(teacher.age, 28)
+        teacher.age = 26
+
+    def test_set_girl_age(self):
+        girl = Girl(age=13)
+        self.assertEqual(girl.age, 13)
+        girl.age = 14
 
 
 if __name__ == '__main__':
 
     unittest.main()
-
-    # 如果没有setter方法,则变为只读
-    # tom.name = 'hanmeimei'
-    # AttributeError: can't set attribute
-
-    # 如果没有实例,property会返回自身
-    # print(Person.age)
-    # 给类赋值一个与property的同名属性时,会重写掉原先的特性
-    # Person.age = 24
-    # print(Person.age)
-    # print(type(Person.age))
-
-    # # 子类重写父类的property
-    # lilei = Student(age=12)
-    # print(lilei.age)
-    # # 无法赋值,报错
-    # # lilei.age = 13
-    #
-    # # 子类重写父类property部分方法
-    # jim = Teacher(27)
-    # jim.age = 30
-    # print(jim.age)
-    #
-    # # 子类重写父类部分方法的另一种办法
-    # lucy = Girl(13)
-    # lucy.age = 14
-    # print(lucy.age)
 
 
