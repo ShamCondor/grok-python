@@ -47,12 +47,29 @@ class Spam(metaclass=Singleton):
     def __init__(self):
         print('Spam __init__ running')
 
+
+class Singleton2:
+
+    _instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if Singleton2._instance:
+            return Singleton2._instance
+        else:
+            super().__new__(cls, *args, **kwargs)
+
+
 if __name__ == '__main__':
     a = Spam()
     b = Spam()
-    print(a is b)
+    assert a is b
     c = Spam()
-    print(a is c)
+    assert c is b
+    a2 = Singleton2()
+    b2 = Singleton2()
+    assert a2 is b2
+    c2 = Singleton2()
+    assert c2 is b2
     '''
     输出结果：
     Singleton __call__ running
