@@ -53,14 +53,19 @@ class WeakRefTestCase(unittest.TestCase):
 
     def test_weakvalue_valuerefs(self):
         """
-        WeakValueDictionary中的value，如果除了WeakValueDictionary本身的引用外，
-        没有其他的引用时，此value内的对象会被回收
+        valuerefs返回一个可迭代的，由弱引用的value组成的列表
         :return:
         """
         weak_value = weakref.WeakValueDictionary()
-        weak_value['obj'] = TestObject()
-        for value in weak_value:
-            self.assertIsNotNone(value)
+        obj = TestObject()
+        weak_value['obj'] = obj
+        self.assertTrue(len(weak_value) == 1)
+        # 将 weak_value.values() 转换成list返回，不会受到若引用对象被删除的影响
+        valuerefs = weak_value.valuerefs()
+        self.assertTrue(len(valuerefs) == 1)
+        del obj
+        self.assertTrue(len(valuerefs) == 1)
+        self.assertTrue(len(weak_value.valuerefs()) == 0)
 
     def test_weakkey_ref(self):
         """
@@ -82,6 +87,22 @@ class WeakRefTestCase(unittest.TestCase):
         weak_key = weakref.WeakKeyDictionary()
         weak_key[TestObject()] = 'obj'
         self.assertTrue(len(weak_key) == 0)
+
+    def test_weakkey_keyrefs(self):
+        """
+        keyrefs返回一个可迭代的，由弱引用的key组成的列表
+        :return:
+        """
+        weak_key = weakref.WeakKeyDictionary()
+        obj = TestObject()
+        weak_key[obj] = 'obj'
+        self.assertTrue(len(weak_key) == 1)
+        # 将 weak_value.values() 转换成list返回，不会受到若引用对象被删除的影响
+        keyrefs = weak_key.keyrefs()
+        self.assertTrue(len(keyrefs) == 1)
+        del obj
+        self.assertTrue(len(keyrefs) == 1)
+        self.assertTrue(len(weak_key.keyrefs()) == 0)
 
 
 if __name__ == '__main__':
