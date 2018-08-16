@@ -89,3 +89,10 @@ ENV/
 .ropeproject
 
 .idea/
+
+# Visual Studio
+.vs/
+*.pyproj
+*.sln
+bin/
+obj/
