@@ -94,6 +94,5 @@ class SingletonTestCase(unittest.TestCase):
         self.assertTrue(b is c)
 
 
-
 if __name__ == '__main__':
     unittest.main()

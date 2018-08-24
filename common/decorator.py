@@ -3,7 +3,7 @@
 # @Time: 2017/6/10 上午10:04
 # @Author: BlackMatrix
 # @Site: https://github.com/blackmatrix7
-# @File: decorator_.py
+# @File: decorator.py
 # @Software: PyCharm
 from functools import wraps
 

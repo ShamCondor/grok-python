@@ -5,7 +5,7 @@
 # @Site    :
 # @File    : func_method.py
 # @Software: PyCharm
-from common_.decorator import test_decorator
+from common.decorator import test_decorator
 
 __author__ = 'blackmatrix'
 
