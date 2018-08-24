@@ -5,6 +5,7 @@
 # @Site    : 
 # @File    : __getattribute__.py
 # @Software: PyCharm
+import unittest
 
 __author__ = 'blackmatrix'
 
@@ -18,7 +19,7 @@ __author__ = 'blackmatrix'
     如果要对类对象自身产生效果,需要在元类中定义__getattribute__
 2.  如果同时定义了__getattr__和__getattribute__,
     __getattr__通常不会被调用,除非__getattribute__明确抛出
-    AttributeErro 异常
+    AttributeError 异常
 3.  在__getattribute__方法中,直接通过 . 号运算取值和通过__dict__
     取值,都会引发无限递归
 4.  为了避免无限递归,要调用父类的__getattribute__方法来获取当前类属性的值
@@ -26,7 +27,7 @@ __author__ = 'blackmatrix'
 '''
 
 
-class ClassA:
+class Foo:
 
     x = 'a'
 
@@ -46,6 +47,37 @@ class ClassA:
         # return self.__dict__[name]
 
 
+class Bar:
+
+    def __getattribute__(self, name):
+        # 使用super获取代理类,执行父类的__getattribute__避免无限递归
+        return super().__getattribute__(name)
+
+    def __getattr__(self, item):
+        return 'unknow'
+
+
+class ClassAttrTestCase(unittest.TestCase):
+
+    def setUp(self):
+        return super().setUp()
+
+    def tearDown(self):
+        return super().tearDown()
+
+    def testGetFooX(self):
+        foo = Foo()
+        self.assertEqual(foo.x, 'a')
+
+    def testGetFooY(self):
+        with self.assertRaises(AttributeError):
+            foo = Foo()
+            self.assertTrue(foo.y)
+
+    def testGetBarAttr(self):
+        bar = Bar()
+        self.assertEqual(bar.x, 'unknow')
+
+
 if __name__ == '__main__':
-    a = ClassA()
-    print(a.x)
+    unittest.main()
