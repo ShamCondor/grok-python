@@ -11,6 +11,15 @@ __author__ = 'blackmatrix'
 
 """
 本例主要演示对有序序列的切片
+
+概要：
+1.  切片操作要提供三个参数 [start_index:  stop_index:  step]  
+    start_index 是切片起始位置
+    stop_index 是切片结束位置，不包括切片结束位置的元素
+    step 是切片步长，默认值是1
+2.  step为正数时，从start_index开始，到stop_index结束，从左向右取值
+3.  step为负数时，从start_index开始，到stop_index结束，从右向左取值
+4.  
 """
 
 
@@ -48,25 +57,31 @@ class SlicesTestCase(unittest.TestCase):
 
     def testSlices04(self):
         """
-        对切片进行赋值，如果被
+        利用切片让有序序列倒序
         :return:
         """
+        foo = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        self.assertEqual(foo[: :-1], [9, 8, 7, 6, 5, 4, 3, 2, 1])
+
+    def testSlices05(self):
+        """
+        切片时，stop_index为负数，起始位置从右往左数
+        :return:
+        """
+        foo = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        # -3 即从右往左数3个元素，为 [7, 8, 9]
+        self.assertEqual(foo[-5:  -2], [5, 6, 7])
+
+    def testSlices06(self):
+        """
+        切片时，start_index为负数，起始位置从右往左数
+        :return:
+        """
+        foo = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        # -3 即从右往左数3个元素，为 [7, 8, 9]
+        self.assertEqual(foo[-3: ], [7, 8, 9])
 
 
 if __name__ == '__main__':
     unittest.main()
-
-    # foo = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    #
-    # print(foo)
-    #
-    # # 可以对切片进行赋值，并且被赋值的序列切片，会根据赋值的属性长度自动调整
-    # foo[1:3] = [20, 30, 40, 50]
-    #
-    # print(foo)
-    #
-    # # 如果赋值的列表超出被赋值的序列长度，会自动扩充被赋值的序列
-    # foo[7:] = [20, 30, 40, 50, 60, 70]
-    #
-    # print(foo)
 
