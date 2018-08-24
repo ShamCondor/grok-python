@@ -3,7 +3,7 @@
 # @Time    : 2017/5/24 20:08
 # @Author  : Matrix
 # @Site    : 
-# @File    : __getattribute__.py
+# @File    : __getattr__.py
 # @Software: PyCharm
 import unittest
 
@@ -11,7 +11,7 @@ __author__ = 'blackmatrix'
 
 
 '''
-本例主要演示 __getattribute__ 的使用
+本例主要演示 __getattribute__ 和 __getattr__ 的使用
 
 概要:
 1.  __getattribute__ 可以无限制的访问类实例的所有属性。
@@ -43,8 +43,6 @@ class Foo:
     def __getattribute__(self, name):
         # 使用super获取代理类,执行父类的__getattribute__避免无限递归
         return super().__getattribute__(name)
-        # 无限递归
-        # return self.__dict__[name]
 
 
 class Bar:
@@ -53,8 +51,17 @@ class Bar:
         # 使用super获取代理类,执行父类的__getattribute__避免无限递归
         return super().__getattribute__(name)
 
-    def __getattr__(self, item):
+    def __getattr__(self, name):
         return 'unknow'
+
+
+class FooBar:
+
+    x = 'x'
+
+    def __getattribute__(self, name):
+        # 无限递归
+        return self.__dict__[name]
 
 
 class ClassAttrTestCase(unittest.TestCase):
@@ -77,6 +84,11 @@ class ClassAttrTestCase(unittest.TestCase):
     def testGetBarAttr(self):
         bar = Bar()
         self.assertEqual(bar.x, 'unknow')
+
+    def testFooBarAttr(self):
+        foobar = FooBar()
+        with self.assertRaises(SystemError):
+            self.assertTrue(foobar.x)
 
 
 if __name__ == '__main__':
