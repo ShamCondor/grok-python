@@ -5,8 +5,18 @@
 # @Site    : 
 # @File    : singleton.py
 # @Software: PyCharm
+import unittest
 
 __author__ = 'blackmatrix'
+
+"""
+单例模式的实现
+
+概要:
+1.  可以同时设定元类的__call__方法，改变类实例化的实现
+2.  通过修改类的__new__方法，在创建类实例的时候进行修改
+3.  两种方式在多线程下都没有问题，推荐第二种，容易阅读理解
+"""
 
 
 class Singleton(type):
@@ -59,24 +69,31 @@ class Singleton2:
             super().__new__(cls, *args, **kwargs)
 
 
+class SingletonTestCase(unittest.TestCase):
+
+    def setUp(self):
+        return super().setUp()
+
+    def tearDown(self):
+        return super().tearDown()
+
+    def testMetaClassSingleton(self):
+        a = Spam()
+        b = Spam()
+        self.assertTrue(a is b)
+        c = Spam()
+        self.assertTrue(a is c)
+        self.assertTrue(b is c)
+
+    def testNewMagicMethoh(self):
+        a = Singleton2()
+        b = Singleton2()
+        self.assertTrue(a is b)
+        c = Singleton2()
+        self.assertTrue(a is c)
+        self.assertTrue(b is c)
+
+
+
 if __name__ == '__main__':
-    a = Spam()
-    b = Spam()
-    assert a is b
-    c = Spam()
-    assert c is b
-    a2 = Singleton2()
-    b2 = Singleton2()
-    assert a2 is b2
-    c2 = Singleton2()
-    assert c2 is b2
-    '''
-    输出结果：
-    Singleton __call__ running
-    Spam __new__ running
-    Spam __init__ running
-    Singleton __call__ running
-    True
-    Singleton __call__ running
-    True
-    '''
+    unittest.main()
