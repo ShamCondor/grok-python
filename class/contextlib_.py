@@ -5,13 +5,21 @@
 # @Site : 
 # @File : contextlib_.py
 # @Software: PyCharm
+import unittest
 from contextlib import contextmanager
+
 __author__ = 'blackmatrix'
 
 """
 本例来自《Python Cookbook》 9.22 以简单的方式定义上下文管理器
 
 主要验证以contextlib装饰器的方式
+
+概要：
+1.  生成器函数加上@contextmanager装饰器，可以很方便的实现上下文管理器
+2.  通过类实现__enter__ 和 __exit__方法也可以实现上下文管理器
+3.  第一种方法实现的上下文管理器，在出现异常时，yield之后的代码不会运行
+4.  第二种方法实现的上下文管理器，在出现异常时，__exit__之后的代码继续运行
 """
 
 
@@ -50,55 +58,65 @@ class ListTransaction:
         self.orig_list[:] = self.working
 
 
+class ContextlibTestCase(unittest.TestCase):
+
+    def setUp(self):
+        return super().setUp()
+
+    def tearDown(self):
+        return super().tearDown()
+
+    def testListTransactionYield(self):
+        """
+        生成器函数实现的上下文管理器
+        没有出现异常时，输出结果正常
+        """
+        foo = [1, 2, 3]
+        with list_transaction(foo) as working:
+            working.append(4)
+            working.append(5)
+        self.assertEqual(foo, [1, 2, 3, 4, 5])
+
+    def testListTransactionYieldError(self):
+        """
+        生成器函数实现的上下文管理器
+        执行引发异常时，由于没有执行yield之后的代码，
+        未对foo 进行赋值，所以foo的值不会修改
+        """
+        foo = [1, 2, 3]
+        with self.assertRaises(RuntimeError):
+            with list_transaction(foo) as working:
+                working.append(4)
+                working.append(5)
+                raise RuntimeError('oops')
+        # yield之后的代码没有执行，所以foo的值不会修改
+        self.assertEqual(foo, [1, 2, 3])
+
+    def testListTransactionClass(self):
+        """
+        以类实现的上下文管理器，当执行没有出现异常时
+        foo被修改，输出结果正常
+        """
+        foo = [1, 2, 3]
+        with ListTransaction(foo) as working:
+            working.append(4)
+            working.append(5)
+        self.assertEqual(foo, [1, 2, 3, 4, 5])
+
+    def testListTransactionClassError(self):
+        """
+        以类实现的上下文管理器，即使出现异常，__exit__方法也会正常执行
+        foo被修改，输出结果正常
+        """
+        foo = [1, 2, 3]
+        with self.assertRaises(RuntimeError):
+            with ListTransaction(foo) as working:
+                working.append(4)
+                working.append(5)
+                raise RuntimeError('oops')
+        self.assertEqual(foo, [1, 2, 3, 4, 5])
+
+
 if __name__ == '__main__':
-    # 没有出现异常时，输出结果正常
-    items_1 = [1, 2, 3]
-    with list_transaction(items_1) as working_1:
-        working_1.append(4)
-        working_1.append(5)
-    print(items_1)
-
-    # 执行引发异常时，由于没有执行yield之后的代码，未对
-    # items_2 进行赋值，所以items_2的值不会修改
-    items_2 = [1, 2, 3]
-    try:
-        with list_transaction(items_2) as working_2:
-            working_2.append(4)
-            working_2.append(5)
-            raise RuntimeError('oops')
-    except Exception as ex:
-        print(ex)
-    finally:
-        print(items_2)
-
-    # 以另外一种方式实现上下文管理器，当没有出现异常时，
-    # 其执行结果与contextmanager装饰器装饰器的上下文管理器函数相同
-    items_3 = [1, 2, 3]
-    with ListTransaction(items_3) as working_3:
-        working_3.append(4)
-        working_3.append(5)
-    print(items_3)
-
-    """
-    两种上下文管理器，最大的区别在于对异常的处理。
-    
-    实现上下文管理器协议的类，__exit__方法在出现异常时，也可以正常执行。
-    
-    而以生成器函数实现的上下文管理器，在出现异常时，装饰器的__exit__方法会将异常传递给生成器函数。
-    如果生成器函数不能正确处理传递过来的异常，则yield之后的代码不会执行。
-    所以通常情况下，yield应在try...except中执行，用于处理异常信息。
-    除非设计之初就打算让yield之后的代码在with代码块内出现异常时不被执行。
-    """
-    items_4 = [1, 2, 3]
-    try:
-        with ListTransaction(items_4) as working_4:
-            working_4.append(4)
-            working_4.append(5)
-            raise RuntimeError('oops')
-    except Exception as ex:
-        print(ex)
-    finally:
-        print(items_4)
-
-
+    unittest.main()
 
