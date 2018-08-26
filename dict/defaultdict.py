@@ -20,8 +20,9 @@ defaultdict的说明与使用
 
 概要：
 1.  defaultdict的第一个参数可以接受一个无参数的函数，当获取不存在的Key时，将这个函数的执行结果作为Value返回
-2.  defaultditc的第二个参数，还可以接受一个类型
-3.  defaultdict的第二个参数为初始化时的值
+2.  defaultdict的第二个参数为初始化时的值
+3.  每次访问不存在的Key时，触发__missing__魔法方法，并调用工厂函数，返回默认值。
+4.  注意每个Key只会调用一次工厂函数，然后将返回的值存储到defaultdict中，下次调用时，直接从defaultdict中读取对应的value并返回
 """
 
 
