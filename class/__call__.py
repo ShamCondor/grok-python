@@ -5,6 +5,7 @@
 # @Site    : 
 # @File    : __call__.py
 # @Software: PyCharm
+import unittest
 
 __author__ = 'blackmatrix'
 
@@ -23,67 +24,61 @@ __author__ = 'blackmatrix'
 class ClassMeta(type):
 
     def __call__(cls, *args, **kwargs):
-        instance = cls.__new__(*args, **kwargs)
-        instance()
+        return 'ClassMeta.__call__  running'
 
 
-class ClassA:
+class Foo:
 
     def __call__(self, *args, **kwargs):
-        print('call ClassA instance')
+        return 'Foo.__call__  running'
 
 
-class ClassB(metaclass=ClassMeta):
-        print('call ClassB instance')
+class Bar(metaclass=ClassMeta):
+    pass
+
+
+class CallTestCase(unittest.TestCase):
+
+    def setUp(self):
+        return super().setUp()
+
+    def tearDown(self):
+        return super().tearDown()
+
+    def testFooCall(self):
+        """
+        类对象Foo增加__call__方法后，其实例就变为可调用对象
+        调用实例foo(), 会返回__call__的执行结果
+        """
+        foo = Foo()
+        # 类一直都是可调用对象
+        self.assertTrue(Foo)
+        # foo已经变成可调用对象
+        self.assertTrue(callable(foo))
+        # foo()的调用结果，就是Foo.__call__的结果
+        self.assertEqual(foo(), 'Foo.__call__  running')
+        # __call__是实例方法，需要传入self，所以这里传入实例foo
+        self.assertEqual(foo(), Foo.__call__(foo))
+
+    def testMetaTypeCall(self):
+        """
+        __call__是实例方法
+        如果希望让类本身变为可调用对象，那么需要在元类中定义__call__方法
+        因为类是元类的实例
+        --------------------------------------
+        类Bar中，因为元类是ClassMeta，而ClassMeta定义了__call__方法
+        所以，在调用Bar()时，不会执行类的实例化，而是执行元类的__call__方法
+        """
+        self.assertEqual(Bar(), 'ClassMeta.__call__  running')
+
+    def testInstanceMethod(self):
+        """
+        实例方法的本质就是描述符
+        所以，通过类去访问描述符符时，等同于调用__call__的__get__方法，返回的是__call__自身
+        """
+        # 这个例子可以看出 Foo.__call__ 就是 Foo.__call__.__get__(None, Foo)
+        self.assertTrue(Foo.__call__ is Foo.__call__.__get__(None, Foo))
 
 
 if __name__ == '__main__':
-
-    '''
-    ClassA实现了__call__方法
-    这个时候，ClassA的实例a，就变成可调用对象
-    调用a()，输出call ClassA instance，说明是调用了__call__方法
-    '''
-    a = ClassA()
-    a()
-    # 输出：call ClassA instance
-    # 其实a()等同于a.__call__()，它本质上就是后者的缩写
-    a.__call__()
-    # 输出：call ClassA instance
-
-    # 判断是否可调用
-    '''
-    类都是可调用对象，因为会返回类的实例
-    官方手册：Note that classes are callable (calling a class returns a new instance)
-    '''
-    print(callable(ClassA))
-    # 输出True
-    '''
-    当实例所属的类定义了__call__方法时，实例也是可调用对象
-    官方手册：instances are callable if their class has a __call__() method.
-    '''
-    print(callable(a))
-    # 输出：True
-
-    '''
-    如果希望让类本身变为可调用对象，那么需要在元类中定义__call__方法
-    因为类是元类的实例。
-    下面的例子中，ClassB的元类是ClassMeta，而ClassMeta定义了__call__方法
-    所以ClassB()不会进行实例化动作，而是调用__call__方法。
-    '''
-    # 这里输出True是因为元类实现了__call__方法，而不是因为调用类会返回实例，这个与ClassA不同
-    print(callable(ClassB))
-    # 输出：True
-    ClassB()
-    # 输出：call
-
-    '''
-    __call__ 是实例方法，只能通过实例调用，所以其实例会成为可调用对象。
-    而实例方法的本质就是描述符。
-    所以，通过类去访问描述符符时，等同于调用__call__的__get__方法，返回的是__call__自身
-    '''
-    # 返回__call__函数
-    print(ClassA.__call__)
-    # 因为
-    print(ClassA.__call__.__get__(None, ClassA))
-    print(ClassA.__call__ == ClassA.__call__.__get__(None, ClassA))
+    unittest.main();
