@@ -4,13 +4,14 @@ from collections import Counter
 __author__ = 'blackmatrix'
 
 """
-Counter是dict的子类
+Counter是dict的子类，接受一个可迭代对象，将其元素和出现次数转换成dict的key和value
 """
 
 
 class CounterTestCase(unittest.TestCase):
 
     def setUp(self):
+        # 声明一些演示使用的变量
         self.foo = Counter('assfwdasxtr')
         self.bar = Counter([1, 2, 3, 1, 7, 7, 8, 2, 7, 8, 9, 1, 5, 8])
         self.foobar = Counter(a=3, b=2, c=0, d=-1)
@@ -45,6 +46,7 @@ class CounterTestCase(unittest.TestCase):
         返回计数最多的前n个元素，如果n省略的话返回全部元素
         返回的的对象为list，每个list的元素都是tuple
         tuple第一个元素为Counter统计的元素名称，第二个元素为统计的次数
+        返回元素的顺序为根据value的值降序
         :return:
         """
         most_common = self.foo.most_common(2)
@@ -93,7 +95,10 @@ class CounterTestCase(unittest.TestCase):
         self.assertEqual(x, Counter({'a': 3, 'b': 2, 'k': 2, 'c': 0, 'j': 0, 'd': -1, 'f': -3}))
 
     def testCounterSubtract2(self):
-
+        """
+        使用减号对两个counter进行运算
+        :return:
+        """
         x = Counter(a=6, b=5, c=3, d=0)
         y = Counter(a=1, b=2, c=3, d=1)
         z = x - y
@@ -104,12 +109,41 @@ class CounterTestCase(unittest.TestCase):
         self.assertNotEqual(id(x), id(z))
 
     def testCounterAddition(self):
+        """
+        使用加号对两个counter进行运算
+        :return:
+        """
         x = Counter(a=6, b=5, c=0, d=-1)
         y = Counter(a=1, b=2, c=0, d=-2)
         z = x+y
+        # 加号运算结果同减号一样，会将统计数量小于等于0的key舍去
         self.assertEqual(z, Counter({'a': 7, 'b': 7}))
+        # 同样也是重新创建一个counter对象，而不是在原对象上进行修改
         self.assertNotEqual(id(x), id(z))
 
+    def testCounterValues(self):
+        """
+        values返回所有key对应的计数，返回dict_values的实例
+        :return:
+        """
+        count_value = self.foo.values()
+        self.assertEqual(list(count_value), [2, 3, 1, 1, 1, 1, 1, 1])
+
+    def testCounterItems(self):
+        """
+        将Counter的内容，以dict_items实例的形式返回
+        dict_items每个元素都一tuple的形式，包含key和value，value为出现的次数
+        dict_items元素的排序以传入Counter类时各个元素出现的次序为准
+        :return:
+        """
+        items = self.foo.items()
+        items = list(items)
+        self.assertEqual(items, [('a', 2), ('s', 3), ('f', 1), ('w', 1), ('d', 1), ('x', 1), ('t', 1), ('r', 1)])
+        # items中元素排序顺序与传入可迭代对象时元素排序的顺序一致
+        # 与most_common的方法区别是most_common会对输出的结果，根据value的值进行降序
+        # 对items的结果进行降序，可以得到和most_common一样的结果
+        items.sort(key=lambda i: i[1], reverse=True)
+        self.assertListEqual(items, self.foo.most_common())
 
 
 if __name__ == "__main__":
