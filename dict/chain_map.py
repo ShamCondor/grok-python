@@ -85,6 +85,5 @@ class ChainMapTestCase(unittest.TestCase):
         self.assertDictEqual(dict(foobar), {'g': 9, 'd': 5, 'e': 6, 'c': 4, 'f': 8})
 
 
-
 if __name__ == '__main__':
     unittest.main()
