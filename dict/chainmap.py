@@ -3,7 +3,7 @@
 # @Time    : 2019/3/12 17:09
 # @Author  : Matrix
 # @Site    : 
-# @File    : chain_map.py
+# @File    : chainmap.py
 # @Software: PyCharm
 import unittest
 from collections import ChainMap
@@ -83,6 +83,21 @@ class ChainMapTestCase(unittest.TestCase):
         # 移除某个映射
         del foobar.maps[0]
         self.assertDictEqual(dict(foobar), {'g': 9, 'd': 5, 'e': 6, 'c': 4, 'f': 8})
+
+    def testChainMapParents(self):
+        """
+        返回一个新的ChainMap，不包含映射列表中第一个dict
+        用于快速忽略第一个元素
+        :return:
+        """
+        foo = {'a': 1, 'b': 2, 'c': 3}
+        bar = {'c': 4, 'd': 5, 'e': 6}
+        baz = {'e': 7, 'f': 8, 'g': 9}
+        foobarbaz = ChainMap(foo, bar, baz)
+        # 返回一个新的ChainMap，不包含映射列表中第一个dict
+        foobar = foobarbaz.parents
+        # 相当于ChainMap(*foobarbaz.maps[1:])
+        self.assertEqual(foobar, ChainMap(*foobarbaz.maps[1:]))
 
 
 if __name__ == '__main__':
