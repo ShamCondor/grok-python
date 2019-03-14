@@ -9,6 +9,17 @@ from operator import itemgetter, attrgetter
 
 __author__ = 'blackmatrix'
 
+"""
+Python标准库中的operator的itemgetter, attrgetter方法
+提供了从标准库获取元素或属性的方式，可以替代简单的lambda表达式，甚至提供更强大的功能
+概要：
+1. itemgetter可以从目标中获取元素
+2. attrgetter可以从目标中获取属性
+3. 两者都可以用于替代简单的获取元素或属性的表达式
+4. itemgetter接收多个参数时，将参数值作为索引，提取目标多个元素，并组成tuple返回
+5. attrgetter接收多个参数时，将参数值作为属性值，提取目标多个元素，并组成tuple返回
+6. attrgetter接收的参数如果带点号"."，会深入嵌套对象，提取指定属性
+"""
 
 get_name = lambda user: user['name']
 
