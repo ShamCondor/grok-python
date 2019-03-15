@@ -26,8 +26,12 @@ class TestStrUnicode(unittest.TestCase):
         self.assertEqual(self.cafe, b'caf\xc3\xa9')
 
     def testBytesSlice(self):
+        # 英文字母各占一个字节， é 占两个字节，所以len的值是5
+        self.assertEqual(len(self.cafe), 5)
         # bytes字节序列每个元素都是0~255(含)之间的整数
         self.assertTrue(self.cafe[0], int)
+        self.assertEqual(self.cafe[0], 99)
+        self.assertEqual(self.cafe[4], 169)
         # bytes的切片还是bytes，即使只有单个元素
         self.assertTrue(isinstance(self.cafe[:1], bytes))
         # 验证字节序列的值
