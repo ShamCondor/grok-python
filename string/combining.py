@@ -11,7 +11,7 @@ __author__ = 'blackmatrix'
 
 """
 combining对字符做检查，判断它是否为组合字符。
-结合规范化方法normalize，及NFD，可以判断某个字符是否用于跟其他字符组合。
+结合规范化方法normalize及NFD，可以判断某个字符是否用于跟其他字符组合。
 例如café，使用NFD进行规范化后，会得到 cafe ́
 依次将5个元素应用到combining进行判断，cafe应用combining方法的值是0
 而́  应用方法的值是230，从而可以得知最后一个字符是用来和其他字符组合的
