@@ -9,11 +9,16 @@ import unicodedata
 
 __author__ = 'BlackMatrix'
 
+"""
+str.maketrans 创建一个字符映射关系的dict类型转换表。
+本例来自《流畅的Python》 4.6.3 极端“规范化”： 去掉变音符号
+"""
 
 # 创建字符映射关系的转换表，接收两个相同长度的字符串，两字符串通过位置的字符即代表转换前和转换后的字符
 # 返回的类型是dict
 single_map = str.maketrans(""",ƒ,,†ˆ‹‘’“”•––˜›""", """'f"*^<''""---~ >""")
 
+# 原书中存在两个字节的key，运行时会引发异常，显示key的长度只能为1
 multi_map = str.maketrans({
     '€': '< euro >',
     '…': '...',
@@ -60,6 +65,7 @@ def shave_marks_latin(txt):
 
 def dewinize(txt):
     # str.translate(table[, deletechars]);
+    # 根据table中的映射关系，对字符串进行转换
     # table即映射表，由maketrans创建
     # deletechars 字符串中需要过滤的字符列表
     return txt.translate(multi_map)
