@@ -39,14 +39,20 @@ def shave_marks_latin(txt):
     keepers = []
     for c in norm_txt:
         # combining配合NFD的规范化使用
-        # 判断使用NFD规范化后的字符串中每个字符，是拉丁基字符还是变音符号
-        # 通俗的说，NFD把cafè拆成cafe
+        # 判断使用NFD规范化后的字符串中每个字符，是否是组合字符
+        # 通俗的说，NFD把cafè拆成cafe和 ́:
+        # 这样在做迭代时，判断到e时，combining返回0，判断到变音符号́ : 时，combining返回230
+        # 这样可以得知最后一个c是组合字符，再结合latin_base变量，等于True时表明上个迭代的项是英文字母，可以认为当前c是变音符号。
+        # 所以使用continue跳过循环，实现过滤掉变音符号的效果
         if unicodedata.combining(c) and latin_base:
             continue
         keepers.append(c)
+        # 判断迭代的元素是不是拉丁基字符，拉丁基字符会返回0，所以要加not
         if not unicodedata.combining(c):
             # string.ascii_letters需import string
             # ascii_letters 返回所有的ascii字符
+            # 如果c是英文字母，那么把latin_base设置为True，为下次循环做准备
+            # 即告知下次循环时，上个元素是个英文字母，那么下个循环如果是组合字符，就认为是变音符号。
             latin_base = c in string.ascii_letters
     shaved = ''.join(keepers)
     return unicodedata.normalize('NFC', shaved)
