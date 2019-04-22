@@ -9,6 +9,11 @@ import sys
 import asyncio
 from asyncio_.server.charfinder.charfinder import UnicodeNameIndex
 
+"""
+例子来自《流畅的Python》 18.6.1 用asyncio包编写TCP服务器
+
+"""
+
 CRLF = b'\r\n'
 PROMPT = b'?>'
 
@@ -18,16 +23,26 @@ __author__ = 'BlackMatrix'
 
 
 def handle_queries(reader, writer):
+    """
+    :param reader: asyncio.StreamReader实例
+    :param writer: asyncio.StreamWriter对象的实例
+    :return:
+    """
     while True:
+        # 这行代码仅仅是打印一个提示符?>到控制台上
         writer.write(PROMPT)
+        # 刷新writer缓冲
         yield from writer.drain()
+        # 返回一个bytes对象
         data = yield from reader.readline()
         try:
             query = data.decode().strip()
         except UnicodeDecodeError:
+            # 出现UnicodeDecodeError就把它当空字符串处理
             query = '\x00'
         client = writer.get_extra_info('peername')
-        print('Received from {}: {! r}'.format(client, query))
+        # 在服务器的控制台中记录查询信息
+        print('Received from {}: {!r}'.format(client, query))
         if query:
             if ord(query[:1]) < 32:
                 break
